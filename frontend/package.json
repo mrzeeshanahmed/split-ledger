@@ -1,0 +1,13 @@
+{
+  "name": "split-ledger-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"Frontend dev server not configured yet\"",
+    "build": "echo \"Frontend build not configured yet\"",
+    "lint": "echo \"Frontend lint not configured yet\"",
+    "typecheck": "echo \"Frontend typecheck not configured yet\"",
+    "test": "echo \"Frontend tests not configured yet\""
+  }
+}
