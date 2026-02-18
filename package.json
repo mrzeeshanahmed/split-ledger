@@ -1,0 +1,21 @@
+{
+  "name": "split-ledger",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "npm -w backend run dev & npm -w frontend run dev",
+    "lint": "npm -w backend run lint && npm -w frontend run lint",
+    "typecheck": "npm -w backend run typecheck && npm -w frontend run typecheck",
+    "test": "node ./scripts/run-tests.js",
+    "build": "npm -w backend run build && npm -w frontend run build",
+    "db:migrate": "echo \"Database migrations not configured yet\"",
+    "test:coverage": "npm run test -- --coverage"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "split-ledger-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"Backend dev server not configured yet\"",
+    "build": "echo \"Backend build not configured yet\"",
+    "lint": "echo \"Backend lint not configured yet\"",
+    "typecheck": "echo \"Backend typecheck not configured yet\"",
+    "test": "echo \"Backend tests not configured yet\""
+  }
+}
