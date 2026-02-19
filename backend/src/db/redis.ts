@@ -135,4 +135,117 @@ export const deleteKey = async (key: string): Promise<void> => {
   await redis.del(key);
 };
 
+/**
+ * Sliding window rate limiter using Redis
+ * Uses a Lua script for atomic operations to ensure accuracy
+ */
+
+// Lua script for sliding window increment
+// KEYS[1]: rate limit key
+// ARGV[1]: window size in seconds
+// ARGV[2]: current timestamp
+// Returns: current count within the window
+const slidingWindowScript = `
+local key = KEYS[1]
+local window = tonumber(ARGV[1])
+local now = tonumber(ARGV[2])
+
+-- Remove entries outside the window
+redis.call('ZREMRANGEBYSCORE', key, '-inf', now - window)
+
+-- Add current request
+redis.call('ZADD', key, now, now)
+
+-- Set expiry to window size
+redis.call('EXPIRE', key, window)
+
+-- Return current count
+return redis.call('ZCARD', key)
+`;
+
+// Script SHA for caching
+let slidingWindowScriptSha: string | null = null;
+
+/**
+ * Load the sliding window script and return its SHA
+ */
+async function loadSlidingWindowScript(): Promise<string> {
+  if (slidingWindowScriptSha) {
+    return slidingWindowScriptSha;
+  }
+
+  const redis = getRedisClient();
+  slidingWindowScriptSha = await redis.scriptLoad(slidingWindowScript);
+  return slidingWindowScriptSha;
+}
+
+/**
+ * Increment counter using sliding window algorithm
+ * Returns the current count within the window
+ */
+export const slidingWindowIncrement = async (
+  key: string,
+  windowSeconds: number
+): Promise<number> => {
+  const redis = getRedisClient();
+
+  try {
+    // Try to use cached SHA first
+    if (slidingWindowScriptSha) {
+      const result = await redis.evalSha(
+        slidingWindowScriptSha,
+        {
+          keys: [key],
+          arguments: [windowSeconds.toString(), Date.now().toString()],
+        }
+      );
+      return result as number;
+    }
+
+    // Load script and execute
+    const sha = await loadSlidingWindowScript();
+    const result = await redis.evalSha(sha, {
+      keys: [key],
+      arguments: [windowSeconds.toString(), Date.now().toString()],
+    });
+    return result as number;
+  } catch (error) {
+    // If script not found, fallback to direct EVAL
+    const result = await redis.eval(slidingWindowScript, {
+      keys: [key],
+      arguments: [windowSeconds.toString(), Date.now().toString()],
+    });
+    return result as number;
+  }
+};
+
+/**
+ * Get current count within the sliding window
+ */
+export const getSlidingWindowCount = async (key: string): Promise<number> => {
+  const redis = getRedisClient();
+  const count = await redis.zCard(key);
+  return count;
+};
+
+/**
+ * Check if rate limit is exceeded
+ * Returns { exceeded: boolean, count: number, resetAt: number }
+ */
+export const checkRateLimit = async (
+  key: string,
+  windowSeconds: number,
+  limit: number
+): Promise<{ exceeded: boolean; count: number; resetAt: number }> => {
+  const now = Date.now();
+  const count = await slidingWindowIncrement(key, windowSeconds);
+  const resetAt = now + windowSeconds * 1000;
+
+  return {
+    exceeded: count > limit,
+    count,
+    resetAt,
+  };
+};
+
 export { client as redisClient };
