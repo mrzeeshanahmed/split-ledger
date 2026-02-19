@@ -3,12 +3,16 @@ import { Server } from 'http';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 import { env } from './config/env.js';
 import logger from './utils/logger.js';
 import { requestIdMiddleware } from './middleware/requestId.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFound.js';
+import { tenantContextMiddleware } from './middleware/tenantContext.js';
+import { apiRateLimiter } from './middleware/rateLimiting.js';
 import healthRoutes from './routes/health.js';
+import authRoutes from './routes/auth.js';
 import { connectWithRetry as connectDb, closePool } from './db/index.js';
 import { connectRedis, closeRedis } from './db/redis.js';
 
@@ -37,11 +41,22 @@ const createApp = (): Application => {
 
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+  app.use(cookieParser());
 
   app.use(requestIdMiddleware);
 
+  // Tenant context middleware (optional for health endpoints)
+  app.use('/api', tenantContextMiddleware());
+
+  // Apply rate limiting to API routes
+  app.use('/api', apiRateLimiter);
+
+  // Health endpoints (no tenant context required)
   app.use('/health', healthRoutes);
   app.use('/ready', healthRoutes);
+
+  // Auth routes
+  app.use('/api/auth', authRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
