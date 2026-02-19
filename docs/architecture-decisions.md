@@ -35,3 +35,14 @@ Create an `IPaymentProvider` interface that abstracts payment operations. Stripe
 - Consistent API across payment operations
 - Slight overhead for abstraction layer
 - Test payments can use mock provider
+
+# Architecture Decisions
+
+## ADR-001: Multi-Tenancy — Schema-per-Tenant
+**Status:** Accepted | **Date:** 2026-02-18
+Schema-per-tenant chosen for split-ledger. See ZEE-5 for full rationale.
+
+## ADR-002: Payment Abstraction — IPaymentProvider
+**Status:** Accepted | **Date:** 2026-02-18  
+IPaymentProvider interface with MockPaymentProvider for dev, StripePaymentProvider for prod.
+See ZEE-6 for full rationale.
