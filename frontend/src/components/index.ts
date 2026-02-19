@@ -149,3 +149,19 @@ export {
   type FormActionsProps,
   type FormRowProps,
 } from './ui/Form';
+
+// Auth components
+export {
+  PasswordStrengthIndicator,
+  type PasswordStrengthIndicatorProps,
+} from './auth/PasswordStrengthIndicator';
+export {
+  ProtectedRoute,
+  type ProtectedRouteProps,
+} from './auth/ProtectedRoute';
+
+// Layout components
+export {
+  AuthLayout,
+  type AuthLayoutProps,
+} from './layouts/AuthLayout';
