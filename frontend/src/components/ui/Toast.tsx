@@ -106,7 +106,7 @@ const positionStyles: Record<ToastPosition, string> = {
  * Toast - Single notification component
  */
 export function Toast({ toast, onDismiss, className, ...props }: ToastProps) {
-  const { bg, icon, iconColor } = variantStyles[toast.variant];
+  const { icon, iconColor } = variantStyles[toast.variant];
 
   return (
     <div
