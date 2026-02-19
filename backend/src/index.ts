@@ -14,8 +14,11 @@ import { apiRateLimiter } from './middleware/rateLimiting.js';
 import healthRoutes from './routes/health.js';
 import authRoutes from './routes/auth.js';
 import apiKeysRoutes from './routes/apiKeys.routes.js';
+import billingRoutes from './routes/billing.js';
 import { connectWithRetry as connectDb, closePool } from './db/index.js';
 import { connectRedis, closeRedis } from './db/redis.js';
+import { initializePaymentProvider } from './services/payment/paymentProvider.js';
+import { startScheduler } from './jobs/scheduler.js';
 
 const createApp = (): Application => {
   const app = express();
@@ -62,6 +65,9 @@ const createApp = (): Application => {
   // API Keys management routes
   app.use('/api/api-keys', apiKeysRoutes);
 
+  // Billing routes
+  app.use('/api/billing', billingRoutes);
+
   app.use(notFoundHandler);
   app.use(errorHandler);
 
@@ -101,6 +107,12 @@ const startServer = async (): Promise<void> => {
   try {
     await connectDb();
     await connectRedis();
+
+    // Initialize payment provider
+    initializePaymentProvider(env.NODE_ENV === 'test' ? 'mock' : 'stripe');
+
+    // Start billing scheduler
+    startScheduler();
 
     const app = createApp();
 
