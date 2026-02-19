@@ -15,7 +15,7 @@
     "typecheck": "npm -w backend run typecheck && npm -w frontend run typecheck",
     "test": "node ./scripts/run-tests.js",
     "build": "npm -w backend run build && npm -w frontend run build",
-    "db:migrate": "echo \"Database migrations not configured yet\"",
+    "db:migrate": "npm -w backend run migrate:up",
     "test:coverage": "npm run test -- --coverage"
   }
 }
