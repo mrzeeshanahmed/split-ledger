@@ -15,3 +15,13 @@ export {
   apiRateLimiter,
   userRateLimiter
 } from './rateLimiting.js';
+export {
+  requireApiKey,
+  requireScope,
+  optionalApiKeyAuth,
+  getApiKeyRateLimitStatus
+} from './apiKeyAuth.js';
+export {
+  apiKeyRateLimiter,
+  apiKeyUsageTracker
+} from './apiKeyRateLimiter.js';
