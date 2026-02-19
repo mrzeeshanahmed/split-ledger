@@ -54,7 +54,7 @@ export interface FormDividerProps extends HTMLAttributes<HTMLDivElement> {
  */
 export interface FormActionsProps extends HTMLAttributes<HTMLDivElement> {
   /** Align actions */
-  align?: 'left' | 'center' | 'right' | 'between';
+  align?: 'left' | 'center' | 'right' | 'between' | 'stack';
 }
 
 /**
@@ -164,11 +164,19 @@ export function FormActions({ align = 'right', children, className, ...props }: 
     center: 'justify-center',
     right: 'justify-end',
     between: 'justify-between',
+    stack: '',
   };
+
+  const isStack = align === 'stack';
 
   return (
     <div
-      className={cn('flex items-center gap-3 pt-4', alignStyles[align], className)}
+      className={cn(
+        isStack ? 'flex flex-col gap-3' : 'flex items-center gap-3',
+        !isStack && alignStyles[align],
+        'pt-4',
+        className,
+      )}
       {...props}
     >
       {children}
