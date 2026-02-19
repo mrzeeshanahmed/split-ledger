@@ -9,3 +9,5 @@ export { RegisterPage } from './RegisterPage';
 export { ForgotPasswordPage } from './ForgotPasswordPage';
 export { ResetPasswordPage } from './ResetPasswordPage';
 export { DashboardPage } from './DashboardPage';
+export { ApiKeysPage } from './ApiKeysPage';
+export { ApiKeyUsagePage } from './ApiKeyUsagePage';
