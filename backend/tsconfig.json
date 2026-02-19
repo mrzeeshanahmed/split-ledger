@@ -2,9 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
     "module": "ESNext",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src", "tests"]
+  "include": ["src/**/*", "tests/**/*"]
 }
