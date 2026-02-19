@@ -131,22 +131,21 @@ export const updateApiKeySchema = z.object({
       .array(z.enum(['read', 'write', 'admin'] as const))
       .min(1, 'At least one scope is required')
       .optional(),
-    rateLimitPerMinute: z
-      .number()
-      .int('Rate limit must be an integer')
-      .min(1, 'Rate limit must be at least 1')
-      .max(10000, 'Rate limit cannot exceed 10000')
-      .optional(),
-    rateLimitPerDay: z
-      .number()
-      .int('Rate limit must be an integer')
-      .min(1, 'Rate limit must be at least 1')
-      .max(1000000, 'Rate limit cannot exceed 1000000')
-      .optional(),
-    expiresAt: z.string().datetime().nullable().optional(),
-  }),
+  })
+    .refine((data) => data.name !== undefined || data.scopes !== undefined, {
+      message: 'At least one field (name or scopes) must be provided',
+    }),
   query: z.object({}).optional(),
   params: z.object({
     apiKeyId: z.string().uuid('Invalid API key ID'),
   }),
+});
+
+/**
+ * Get aggregated usage statistics validation schema
+ */
+export const getAggregatedUsageSchema = z.object({
+  body: z.object({}).optional(),
+  query: z.object({}).optional(),
+  params: z.object({}).optional(),
 });
