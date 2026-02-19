@@ -165,3 +165,15 @@ export {
   AuthLayout,
   type AuthLayoutProps,
 } from './layouts/AuthLayout';
+
+// API Key components
+export {
+  ApiKeyReveal,
+  CreateApiKeyModal,
+  RevokeConfirmationModal,
+  UsageChart,
+  type ApiKeyRevealProps,
+  type CreateApiKeyModalProps,
+  type RevokeConfirmationModalProps,
+  type UsageChartProps,
+} from './api-keys';
