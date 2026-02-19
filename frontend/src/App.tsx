@@ -3,11 +3,15 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from '@/components';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { LoginPage } from '@/pages/LoginPage';
-import { RegisterPage } from '@/pages/RegisterPage';
-import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage';
-import { ResetPasswordPage } from '@/pages/ResetPasswordPage';
-import { DashboardPage } from '@/pages/DashboardPage';
+import {
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  DashboardPage,
+  ApiKeysPage,
+  ApiKeyUsagePage,
+} from '@/pages';
 
 /**
  * Create React Query client
@@ -42,6 +46,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/api-keys"
+              element={
+                <ProtectedRoute>
+                  <ApiKeysPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/api-keys/:id/usage"
+              element={
+                <ProtectedRoute>
+                  <ApiKeyUsagePage />
                 </ProtectedRoute>
               }
             />
