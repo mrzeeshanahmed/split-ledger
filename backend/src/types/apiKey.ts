@@ -97,3 +97,49 @@ export interface ApiKeyRateLimitStatus {
   limitDay: number;
   resetDay: number;
 }
+
+/**
+ * Input for updating an API key
+ */
+export interface UpdateApiKeyInput {
+  name?: string;
+  scopes?: ApiKeyScope[];
+}
+
+/**
+ * Detailed usage statistics for a single API key
+ */
+export interface DetailedUsageStats {
+  totalRequests: number;
+  successRate: number;
+  avgResponseTime: number;
+  last24Hours: number;
+  topEndpoints: Array<{
+    endpoint: string;
+    method: string;
+    count: number;
+  }>;
+  requestsByDay: Array<{
+    date: string;
+    count: number;
+  }>;
+}
+
+/**
+ * Aggregated usage statistics across all API keys
+ */
+export interface AggregatedUsageStats {
+  totalApiKeys: number;
+  activeApiKeys: number;
+  totalRequests: number;
+  requestsLast24Hours: number;
+  avgResponseTime: number;
+  globalSuccessRate: number;
+  topApiKeys: Array<{
+    apiKeyId: string;
+    keyPrefix: string;
+    name: string;
+    requestCount: number;
+    lastUsedAt: Date | null;
+  }>;
+}
