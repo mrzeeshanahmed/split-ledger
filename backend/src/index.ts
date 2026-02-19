@@ -13,6 +13,7 @@ import { tenantContextMiddleware } from './middleware/tenantContext.js';
 import { apiRateLimiter } from './middleware/rateLimiting.js';
 import healthRoutes from './routes/health.js';
 import authRoutes from './routes/auth.js';
+import apiKeysRoutes from './routes/apiKeys.routes.js';
 import { connectWithRetry as connectDb, closePool } from './db/index.js';
 import { connectRedis, closeRedis } from './db/redis.js';
 
@@ -57,6 +58,9 @@ const createApp = (): Application => {
 
   // Auth routes
   app.use('/api/auth', authRoutes);
+
+  // API Keys management routes
+  app.use('/api/api-keys', apiKeysRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
