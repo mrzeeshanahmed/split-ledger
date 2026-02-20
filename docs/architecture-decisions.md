@@ -208,3 +208,88 @@ We will implement a secure API key system with the following specifications:
 - Webhook on key revocation
 - Automated key renewal for expired keys
 
+---
+
+## ADR-005: Billing Engine
+
+### Status
+Accepted
+
+### Context
+The platform needs a complete billing engine with:
+- Usage metering for tracking API calls, storage, and other billable metrics
+- Plan configuration with tiered pricing and overage charges
+- Monthly billing job with idempotency to prevent duplicate charges
+- Revenue split with Stripe Connect (platform fee)
+- Reconciliation endpoint for financial reporting
+
+### Decision
+
+**Usage Metering Architecture:**
+- Usage records stored in tenant schemas (ADR-001 compliant)
+- Table `usage_records` in each tenant schema with: metric, quantity, unit_price_cents, total_price_cents
+- Usage Meter Service provides methods for recording and aggregating usage
+
+**Revenue Records:**
+- Revenue records stored in **public schema** (cross-tenant financial visibility)
+- Table `revenue_records` with: tenant_id, billing_period, gross_amount, platform_fee, net_amount
+- Foreign key to tenants table for referential integrity
+
+**Idempotency Strategy:**
+- Job-level: Redis key `billing_job:<period>` with status (in_progress, completed, failed)
+- Tenant-level: Redis key `billing:<tenantId>:<period>` to prevent duplicate billing
+- Stripe idempotency keys used for all Stripe API calls
+
+**Revenue Split:**
+- Platform fee percentage configurable via PLATFORM_FEE_PERCENT (default 20%)
+- Applied to gross amount before splitting
+- Net amount transferred to tenant's Stripe Connect account (future)
+- Revenue recorded in public schema for platform reporting
+
+**Monthly Billing Job:**
+- Scheduled via node-cron on 1st of month at 00:05 UTC
+- Dry-run mode supported for testing
+- Per-tenant error handling - failures don't block other tenants
+- Comprehensive logging for debugging
+
+**Plan Configuration:**
+- Plans defined in code: free, basic, pro, enterprise
+- Each plan has included quantities for API calls and storage
+- Overage pricing per unit beyond included amount
+- Stripe Price IDs for subscription plans
+
+### Consequences
+
+**Positive:**
+- Complete billing solution with minimal external dependencies
+- Idempotency prevents duplicate charges and billing errors
+- Tenant-scoped usage ensures data isolation
+- Public revenue records enable platform-wide reporting
+- Stripe abstraction allows for easy provider changes (ADR-002)
+- Mock provider enables testing without Stripe
+
+**Negative:**
+- Requires Redis for idempotency keys
+- Stripe Connect requires additional tenant onboarding
+- Usage aggregation queries can be expensive for large periods
+
+**Security Considerations:**
+- Billing endpoints require admin role
+- Usage recording requires authentication
+- No sensitive data in logs
+- Stripe keys stored in environment variables
+
+**Monitoring & Operations:**
+- Monitor failed charges and dunning queue
+- Track platform revenue via reconciliation
+- Alert on billing job failures
+- Consider usage archival for old records
+
+**Future Enhancements:**
+- Dunning flow with retry logic
+- Invoice generation
+- Usage alerts and notifications
+- Stripe Connect onboarding flow
+- Proration for plan changes
+
+

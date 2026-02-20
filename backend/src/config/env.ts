@@ -32,6 +32,9 @@ const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string().min(1, 'STRIPE_SECRET_KEY is required'),
   STRIPE_PUBLISHABLE_KEY: z.string().min(1, 'STRIPE_PUBLISHABLE_KEY is required'),
   STRIPE_WEBHOOK_SECRET: z.string().min(1, 'STRIPE_WEBHOOK_SECRET is required'),
+  STRIPE_PRICE_STARTER: z.string().min(1, 'STRIPE_PRICE_STARTER is required'),
+  STRIPE_PRICE_PRO: z.string().min(1, 'STRIPE_PRICE_PRO is required'),
+  PLATFORM_FEE_PERCENT: z.string().regex(/^\d+$/).transform(Number).default('20'),
 
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
   ALLOWED_ORIGINS: z.string().transform((val) => val.split(',').map((s) => s.trim())),
