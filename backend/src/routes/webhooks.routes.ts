@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { WebhookDispatcher } from '../services/webhookDispatcher.js';
+import { WEBHOOK_EVENTS } from '../config/webhookEvents.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { NotFoundError } from '../errors/index.js';
@@ -10,6 +11,10 @@ import {
   getWebhookSchema,
   deleteWebhookSchema,
   listWebhooksSchema,
+  listDeliveriesSchema,
+  getDeliverySchema,
+  redeliverDeliverySchema,
+  testWebhookSchema,
   listDeadLettersSchema,
   redeliverDeadLetterSchema,
 } from '../validation/webhook.validation.js';
@@ -17,6 +22,10 @@ import { getTenantSchema } from '../db/tenantClient.js';
 
 const router = Router({ mergeParams: true });
 
+/**
+ * Helper function to format webhook for API response
+ * Never exposes secret
+ */
 function formatWebhook(webhook: any) {
   return {
     id: webhook.id,
@@ -30,6 +39,9 @@ function formatWebhook(webhook: any) {
   };
 }
 
+/**
+ * Helper function to format delivery for API response
+ */
 function formatDelivery(delivery: any) {
   return {
     id: delivery.id,
@@ -46,6 +58,14 @@ function formatDelivery(delivery: any) {
     createdAt: delivery.created_at,
   };
 }
+
+/**
+ * GET /webhooks/events
+ * Get list of available webhook event types
+ */
+router.get('/events', requireAuth, requireRole('owner', 'admin'), (_req, res) => {
+  res.json({ events: WEBHOOK_EVENTS });
+});
 
 /**
  * GET /webhooks/dead-letters
@@ -114,7 +134,11 @@ router.get(
   async (req, res, next) => {
     try {
       const tenantSchema = getTenantSchema(req.tenantId!);
-      const webhooks = await WebhookDispatcher.listWebhooks(tenantSchema);
+      const isActive = req.query.isActive as boolean | undefined;
+      const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+      const offset = req.query.offset ? parseInt(req.query.offset as string, 10) : 0;
+
+      const webhooks = await WebhookDispatcher.listWebhooks(tenantSchema, isActive, limit, offset);
       res.json({ webhooks: webhooks.map(formatWebhook), total: webhooks.length });
     } catch (error) {
       next(error);
@@ -125,6 +149,7 @@ router.get(
 /**
  * POST /webhooks
  * Create a new webhook
+ * Returns the secret only once in the response
  */
 router.post(
   '/',
@@ -137,7 +162,7 @@ router.post(
       const tenantSchema = getTenantSchema(req.tenantId!);
       const createdBy = req.user!.id;
 
-      const webhook = await WebhookDispatcher.createWebhook(
+      const result = await WebhookDispatcher.createWebhook(
         tenantSchema,
         url,
         events,
@@ -148,12 +173,16 @@ router.post(
 
       logger.info({
         message: 'Webhook created via API',
-        webhookId: webhook.id,
+        webhookId: result.webhook.id,
         tenantSchema,
         createdBy,
       });
 
-      res.status(201).json({ webhook: formatWebhook(webhook) });
+      // Return webhook with secret (shown only once)
+      res.status(201).json({
+        webhook: formatWebhook(result.webhook),
+        secret: result.secret,
+      });
     } catch (error) {
       next(error);
     }
@@ -162,7 +191,7 @@ router.post(
 
 /**
  * GET /webhooks/:webhookId
- * Get a single webhook by ID
+ * Get a single webhook by ID with delivery stats
  */
 router.get(
   '/:webhookId',
@@ -174,13 +203,16 @@ router.get(
       const { webhookId } = req.params;
       const tenantSchema = getTenantSchema(req.tenantId!);
 
-      const webhook = await WebhookDispatcher.getWebhookById(tenantSchema, webhookId);
+      const result = await WebhookDispatcher.getWebhookWithStats(tenantSchema, webhookId);
 
-      if (!webhook) {
+      if (!result) {
         throw new NotFoundError('Webhook');
       }
 
-      res.json({ webhook: formatWebhook(webhook) });
+      res.json({
+        webhook: formatWebhook(result.webhook),
+        stats: result.stats,
+      });
     } catch (error) {
       next(error);
     }
@@ -229,7 +261,7 @@ router.patch(
 
 /**
  * DELETE /webhooks/:webhookId
- * Delete a webhook
+ * Delete a webhook (soft delete)
  */
 router.delete(
   '/:webhookId',
@@ -241,9 +273,9 @@ router.delete(
       const { webhookId } = req.params;
       const tenantSchema = getTenantSchema(req.tenantId!);
 
-      const deleted = await WebhookDispatcher.deleteWebhook(tenantSchema, webhookId);
+      const webhook = await WebhookDispatcher.deleteWebhook(tenantSchema, webhookId);
 
-      if (!deleted) {
+      if (!webhook) {
         throw new NotFoundError('Webhook');
       }
 
@@ -254,7 +286,144 @@ router.delete(
         deletedBy: req.user!.id,
       });
 
-      res.status(204).send();
+      res.json({ webhook: formatWebhook(webhook) });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+/**
+ * GET /webhooks/:webhookId/deliveries
+ * List delivery logs for a specific webhook
+ */
+router.get(
+  '/:webhookId/deliveries',
+  validate(listDeliveriesSchema),
+  requireAuth,
+  requireRole('owner', 'admin'),
+  async (req, res, next) => {
+    try {
+      const { webhookId } = req.params;
+      const tenantSchema = getTenantSchema(req.tenantId!);
+      const status = req.query.status as 'pending' | 'success' | 'failed' | 'dead' | undefined;
+      const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 100;
+      const offset = req.query.offset ? parseInt(req.query.offset as string, 10) : 0;
+
+      // Verify webhook exists
+      const webhook = await WebhookDispatcher.getWebhookById(tenantSchema, webhookId);
+      if (!webhook) {
+        throw new NotFoundError('Webhook');
+      }
+
+      const deliveries = await WebhookDispatcher.listWebhookDeliveries(
+        tenantSchema,
+        webhookId,
+        status,
+        limit,
+        offset,
+      );
+
+      res.json({ deliveries: deliveries.map(formatDelivery), total: deliveries.length });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+/**
+ * GET /webhooks/:webhookId/deliveries/:deliveryId
+ * Get full delivery detail
+ */
+router.get(
+  '/:webhookId/deliveries/:deliveryId',
+  validate(getDeliverySchema),
+  requireAuth,
+  requireRole('owner', 'admin'),
+  async (req, res, next) => {
+    try {
+      const { webhookId, deliveryId } = req.params;
+      const tenantSchema = getTenantSchema(req.tenantId!);
+
+      const delivery = await WebhookDispatcher.getWebhookDelivery(
+        tenantSchema,
+        webhookId,
+        deliveryId,
+      );
+
+      if (!delivery) {
+        throw new NotFoundError('Webhook delivery');
+      }
+
+      res.json({ delivery: formatDelivery(delivery) });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+/**
+ * POST /webhooks/:webhookId/deliveries/:deliveryId/redeliver
+ * Re-trigger a specific delivery
+ */
+router.post(
+  '/:webhookId/deliveries/:deliveryId/redeliver',
+  validate(redeliverDeliverySchema),
+  requireAuth,
+  requireRole('owner', 'admin'),
+  async (req, res, next) => {
+    try {
+      const { webhookId, deliveryId } = req.params;
+      const tenantSchema = getTenantSchema(req.tenantId!);
+
+      const delivery = await WebhookDispatcher.redeliverWebhook(
+        tenantSchema,
+        webhookId,
+        deliveryId,
+      );
+
+      if (!delivery) {
+        throw new NotFoundError('Webhook delivery');
+      }
+
+      logger.info({
+        message: 'Webhook delivery redelivered via API',
+        deliveryId,
+        webhookId,
+        tenantSchema,
+        requestedBy: req.user!.id,
+      });
+
+      res.json({ delivery: formatDelivery(delivery) });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+/**
+ * POST /webhooks/:webhookId/test
+ * Test webhook with a live HTTP request (not logged to deliveries)
+ */
+router.post(
+  '/:webhookId/test',
+  validate(testWebhookSchema),
+  requireAuth,
+  requireRole('owner', 'admin'),
+  async (req, res, next) => {
+    try {
+      const { webhookId } = req.params;
+      const { eventType, payload } = req.body;
+      const tenantSchema = getTenantSchema(req.tenantId!);
+
+      const result = await WebhookDispatcher.testWebhook(
+        tenantSchema,
+        webhookId,
+        eventType,
+        payload,
+      );
+
+      res.json(result);
     } catch (error) {
       next(error);
     }
