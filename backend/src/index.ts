@@ -15,10 +15,12 @@ import healthRoutes from './routes/health.js';
 import authRoutes from './routes/auth.js';
 import apiKeysRoutes from './routes/apiKeys.routes.js';
 import billingRoutes from './routes/billing.js';
+import webhookRoutes from './routes/webhooks.routes.js';
 import { connectWithRetry as connectDb, closePool } from './db/index.js';
 import { connectRedis, closeRedis } from './db/redis.js';
 import { initializePaymentProvider } from './services/payment/paymentProvider.js';
 import { startScheduler } from './jobs/scheduler.js';
+import { startWebhookWorker, stopWebhookWorker } from './workers/webhookWorker.js';
 
 const createApp = (): Application => {
   const app = express();
@@ -68,6 +70,9 @@ const createApp = (): Application => {
   // Billing routes
   app.use('/api/billing', billingRoutes);
 
+  // Webhook routes
+  app.use('/api/webhooks', webhookRoutes);
+
   app.use(notFoundHandler);
   app.use(errorHandler);
 
@@ -80,6 +85,7 @@ const gracefulShutdown = (server: Server): void => {
 
     server.close(async () => {
       try {
+        stopWebhookWorker();
         await closePool();
         await closeRedis();
         logger.info({ message: 'Graceful shutdown complete' });
@@ -113,6 +119,9 @@ const startServer = async (): Promise<void> => {
 
     // Start billing scheduler
     startScheduler();
+
+    // Start webhook delivery worker
+    startWebhookWorker();
 
     const app = createApp();
 
