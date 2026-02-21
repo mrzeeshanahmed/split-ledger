@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Modal, PrimaryButton, SecondaryButton } from '@/components';
+import { Modal, PrimaryButton } from '@/components';
 import { cn } from '@/lib/utils';
 
 /**

@@ -177,3 +177,9 @@ export {
   type RevokeConfirmationModalProps,
   type UsageChartProps,
 } from './api-keys';
+
+// Billing components
+export {
+  UsageWarningBanner,
+  type UsageWarningBannerProps,
+} from './billing/UsageWarningBanner';

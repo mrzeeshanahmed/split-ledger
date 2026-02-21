@@ -54,6 +54,7 @@ export function DashboardPage() {
     { label: 'Settlements', icon: <SettlementsIcon />, href: '/settlements' },
     { label: 'API Keys', icon: <KeyIcon />, href: '/dashboard/api-keys' },
     { label: 'Settings', icon: <SettingsIcon />, href: '/settings' },
+    { label: 'Billing', icon: <BillingIcon />, href: '/dashboard/billing' },
   ];
 
   const sidebar = (
@@ -346,6 +347,14 @@ function KeyIcon() {
         strokeWidth={2}
         d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11.536 18.464a2.992 2.992 0 01-.3 3.197 2.993 2.993 0 01-4.237.225 3 3 0 01-.225-4.237 2.992 2.992 0 013.197-.3l3.72-3.721a6 6 0 015.743-7.743z"
       />
+    </svg>
+  );
+}
+
+function BillingIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
     </svg>
   );
 }

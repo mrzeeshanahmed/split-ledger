@@ -141,7 +141,6 @@ export function UsageChart({ data, height = 200, loading, className }: UsageChar
 
   const padding = { top: 20, right: 20, bottom: 40, left: 50 };
   const chartHeight = height - padding.top - padding.bottom;
-  const chartWidth = 800 - padding.left - padding.right;
 
   return (
     <div className={cn('bg-white rounded-lg border border-border-default p-4', className)}>
