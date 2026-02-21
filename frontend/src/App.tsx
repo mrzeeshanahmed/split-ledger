@@ -11,6 +11,10 @@ import {
   DashboardPage,
   ApiKeysPage,
   ApiKeyUsagePage,
+  BillingPage,
+  PlanUpgradePage,
+  InvoicesPage,
+  StripeConnectPage,
 } from '@/pages';
 
 /**
@@ -62,6 +66,40 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ApiKeyUsagePage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Billing routes */}
+            <Route
+              path="/dashboard/billing"
+              element={
+                <ProtectedRoute>
+                  <BillingPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/billing/upgrade"
+              element={
+                <ProtectedRoute>
+                  <PlanUpgradePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/billing/invoices"
+              element={
+                <ProtectedRoute>
+                  <InvoicesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/billing/connect"
+              element={
+                <ProtectedRoute>
+                  <StripeConnectPage />
                 </ProtectedRoute>
               }
             />
