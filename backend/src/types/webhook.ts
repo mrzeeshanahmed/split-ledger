@@ -1,9 +1,11 @@
 export type WebhookDeliveryStatus = 'pending' | 'success' | 'failed' | 'dead';
 
+/**
+ * Webhook interface (without secret for API responses)
+ */
 export interface Webhook {
   id: string;
   url: string;
-  secret: string;
   events: string[];
   is_active: boolean;
   description: string | null;
@@ -12,6 +14,35 @@ export interface Webhook {
   updated_at: Date;
 }
 
+/**
+ * Webhook interface with secret (used internally, never exposed via API)
+ */
+export interface WebhookWithSecret extends Webhook {
+  secret: string;
+}
+
+/**
+ * Webhook with delivery summary stats
+ */
+export interface WebhookWithStats extends Webhook {
+  stats: WebhookStats;
+}
+
+/**
+ * Webhook delivery stats
+ */
+export interface WebhookStats {
+  totalDeliveries: number;
+  successCount: number;
+  failureCount: number;
+  deadCount: number;
+  lastDeliveryAt: Date | null;
+  successRate: number;
+}
+
+/**
+ * Webhook delivery record
+ */
 export interface WebhookDelivery {
   id: string;
   webhook_id: string;
@@ -27,6 +58,9 @@ export interface WebhookDelivery {
   created_at: Date;
 }
 
+/**
+ * Webhook event envelope
+ */
 export interface WebhookEventEnvelope {
   id: string;
   type: string;
@@ -34,13 +68,27 @@ export interface WebhookEventEnvelope {
   data: Record<string, unknown>;
 }
 
+/**
+ * Input for creating a webhook
+ */
 export interface CreateWebhookInput {
   url: string;
-  secret?: string;
   events: string[];
   description?: string;
+  secret?: string;
 }
 
+/**
+ * Result of creating a webhook - includes the secret (returned only once)
+ */
+export interface CreateWebhookResult {
+  webhook: Webhook;
+  secret: string;
+}
+
+/**
+ * Input for updating a webhook
+ */
 export interface UpdateWebhookInput {
   url?: string;
   events?: string[];
@@ -48,8 +96,22 @@ export interface UpdateWebhookInput {
   is_active?: boolean;
 }
 
+/**
+ * Webhook delivery job for Redis queue
+ */
 export interface WebhookDeliveryJob {
   deliveryId: string;
   webhookId: string;
   tenantSchema: string;
+}
+
+/**
+ * Webhook test result
+ */
+export interface WebhookTestResult {
+  success: boolean;
+  statusCode: number | null;
+  responseBody: string | null;
+  error: string | null;
+  latencyMs: number;
 }

@@ -4,8 +4,7 @@
     "outDir": "dist",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["node", "express"]
+    "typeRoots": ["../node_modules/@types", "./src/types"]
   },
   "include": ["src/**/*"]
 }

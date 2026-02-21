@@ -2,7 +2,7 @@ import { getRedisClient } from '../db/redis.js';
 import { tenantDb } from '../db/tenantClient.js';
 import { WebhookDispatcher } from '../services/webhookDispatcher.js';
 import logger from '../utils/logger.js';
-import { Webhook, WebhookDelivery, WebhookDeliveryJob } from '../types/webhook.js';
+import { WebhookWithSecret, WebhookDelivery, WebhookDeliveryJob } from '../types/webhook.js';
 
 const REDIS_QUEUE_KEY = 'queue:webhooks';
 const POLL_INTERVAL_MS = 1000;
@@ -49,7 +49,7 @@ async function processDelivery(job: WebhookDeliveryJob): Promise<void> {
     return;
   }
 
-  const webhook = await WebhookDispatcher.getWebhookById(tenantSchema, webhookId);
+  const webhook: WebhookWithSecret | null = await WebhookDispatcher.getWebhookWithSecretById(tenantSchema, webhookId);
 
   if (!webhook) {
     logger.warn({
@@ -229,7 +229,7 @@ function scheduleRetry(job: WebhookDeliveryJob, delayMs: number): void {
 
 async function notifyTenantOwnerOnDeadDelivery(
   tenantSchema: string,
-  webhook: Webhook,
+  webhook: WebhookWithSecret,
   deliveryId: string,
 ): Promise<void> {
   logger.info({
