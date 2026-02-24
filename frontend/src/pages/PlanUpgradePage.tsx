@@ -71,6 +71,7 @@ export function PlanUpgradePage() {
     { label: 'Groups', icon: <GroupsIcon />, href: '/groups' },
     { label: 'Settlements', icon: <SettlementsIcon />, href: '/settlements' },
     { label: 'API Keys', icon: <KeyIcon />, href: '/dashboard/api-keys' },
+    { label: 'Webhooks', icon: <WebhooksIcon />, href: '/dashboard/webhooks' },
     { label: 'Settings', icon: <SettingsIcon />, href: '/settings' },
     { label: 'Billing', icon: <BillingIcon />, href: '/dashboard/billing', active: true },
   ];
@@ -186,11 +187,10 @@ function UpgradeForm({ plans, onSuccess }: UpgradeFormProps) {
             key={plan.id}
             type="button"
             onClick={() => setSelectedPlanId(plan.id)}
-            className={`text-left rounded-lg border-2 p-5 transition-all duration-normal focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 ${
-              selectedPlanId === plan.id
+            className={`text-left rounded-lg border-2 p-5 transition-all duration-normal focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 ${selectedPlanId === plan.id
                 ? 'border-primary-500 bg-primary-50'
                 : 'border-border-default bg-white hover:border-border-strong'
-            }`}
+              }`}
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-text-primary">{plan.name}</h3>
@@ -336,6 +336,14 @@ function LockIcon() {
   return (
     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+    </svg>
+  );
+}
+
+function WebhooksIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
     </svg>
   );
 }

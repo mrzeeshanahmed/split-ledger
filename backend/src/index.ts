@@ -16,6 +16,7 @@ import authRoutes from './routes/auth.js';
 import apiKeysRoutes from './routes/apiKeys.routes.js';
 import billingRoutes from './routes/billing.js';
 import webhookRoutes from './routes/webhooks.routes.js';
+import { analyticsRoutes } from './routes/analytics.routes.js';
 import { connectWithRetry as connectDb, closePool } from './db/index.js';
 import { connectRedis, closeRedis } from './db/redis.js';
 import { initializePaymentProvider } from './services/payment/paymentProvider.js';
@@ -72,6 +73,9 @@ const createApp = (): Application => {
 
   // Webhook routes
   app.use('/api/webhooks', webhookRoutes);
+
+  // Analytics routes
+  app.use('/api/analytics', analyticsRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

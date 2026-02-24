@@ -1,13 +1,13 @@
-import { query } from '../../db/index.js';
-import { setWithExpiry, getJSON } from '../../db/redis.js';
-import { getPaymentProvider } from '../payment/paymentProvider.js';
-import { UsageMeterService } from './usageMeter.js';
-import { BillingCalculatorService } from './billingCalculator.js';
-import { ReconciliationService } from './reconciliation.js';
-import { BillingError, BillingResult, BillingJobResult } from '../../types/billing.js';
-import type { Tenant } from '../../types/tenant.js';
-import { env } from '../../config/env.js';
-import logger from '../../utils/logger.js';
+import { query } from '../db/index.js';
+import { setWithExpiry, getJSON } from '../db/redis.js';
+import { getPaymentProvider } from '../services/payment/paymentProvider.js';
+import { UsageMeterService } from '../services/billing/usageMeter.js';
+import { BillingCalculatorService } from '../services/billing/billingCalculator.js';
+import { ReconciliationService } from '../services/billing/reconciliation.js';
+import { BillingError, BillingResult, BillingJobResult } from '../types/billing.js';
+import type { Tenant } from '../types/tenant.js';
+import { env } from '../config/env.js';
+import logger from '../utils/logger.js';
 
 export interface BillingJobOptions {
   dryRun?: boolean;
@@ -98,7 +98,7 @@ export async function runMonthlyBilling(
 
     for (const tenant of tenants) {
       try {
-        const result = await processTenantBilling(tenant, billingPeriod, dryRun);
+        const result = await processTenantBilling(tenant as Tenant, billingPeriod, dryRun);
         results.push(result);
 
         if (result.success) {
@@ -210,13 +210,13 @@ async function processTenantBilling(
 
   const calculation = BillingCalculatorService.calculateBilling(
     tenant.subscription_plan,
-    usageAggregations,
+    usageAggregations as any,
     env.PLATFORM_FEE_PERCENT
   );
 
   const charges = [
     { type: 'subscription' as const, amountCents: calculation.subscriptionChargeCents },
-    ...calculation.overageCharges.map((charge) => ({ type: 'overage' as const, amountCents: charge.overageCostCents })),
+    ...calculation.overageCharges.map((charge: any) => ({ type: 'overage' as const, amountCents: charge.overageCostCents })),
   ];
 
   if (calculation.totalCents === 0) {

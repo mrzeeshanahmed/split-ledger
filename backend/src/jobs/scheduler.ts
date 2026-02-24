@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import { runMonthlyBilling, getBillingPeriodString } from './monthlyBilling.js';
 import logger from '../utils/logger.js';
 
-let scheduler: cron.ScheduledTask | null = null;
+let scheduler: any = null;
 
 const SCHEDULE_CRON = '5 0 1 * *'; // Run at 00:05 UTC on the 1st of each month
 
@@ -29,7 +29,7 @@ export function startScheduler(): void {
 
     try {
       const result = await runMonthlyBilling(billingPeriod);
-      
+
       logger.info({
         message: 'Scheduled billing job completed',
         billingPeriod,
@@ -85,7 +85,7 @@ export async function triggerManualBilling(
 
   try {
     const result = await runMonthlyBilling(period, options);
-    
+
     logger.info({
       message: 'Manual billing completed',
       billingPeriod: period,

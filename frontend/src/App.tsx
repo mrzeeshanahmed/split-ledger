@@ -12,9 +12,12 @@ import {
   ApiKeysPage,
   ApiKeyUsagePage,
   BillingPage,
+  AnalyticsPage,
   PlanUpgradePage,
   InvoicesPage,
   StripeConnectPage,
+  WebhooksListPage,
+  WebhookDetailPage,
 } from '@/pages';
 
 /**
@@ -62,10 +65,36 @@ function App() {
               }
             />
             <Route
+              path="/dashboard/analytics"
+              element={
+                <ProtectedRoute>
+                  <AnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/dashboard/api-keys/:id/usage"
               element={
                 <ProtectedRoute>
                   <ApiKeyUsagePage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Webhook routes */}
+            <Route
+              path="/dashboard/webhooks"
+              element={
+                <ProtectedRoute>
+                  <WebhooksListPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/webhooks/:id"
+              element={
+                <ProtectedRoute>
+                  <WebhookDetailPage />
                 </ProtectedRoute>
               }
             />

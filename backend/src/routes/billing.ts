@@ -135,7 +135,7 @@ router.get(
       const usageAggregations = await UsageMeterService.getUsageForPeriod(tenantSchema, { startDate, endDate });
       const subscriptionPlan = (req as any).user?.subscriptionPlan || 'free';
 
-      const preview = BillingCalculatorService.previewBilling(subscriptionPlan, usageAggregations);
+      const preview = BillingCalculatorService.previewBilling(subscriptionPlan, usageAggregations as any);
 
       res.json({ billingPeriod, startDate: startDate.toISOString(), endDate: endDate.toISOString(), ...preview });
     } catch (error) {

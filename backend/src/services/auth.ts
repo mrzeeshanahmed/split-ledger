@@ -21,8 +21,8 @@ export class AuthService {
    * Generate access token
    */
   static generateAccessToken(payload: TokenPayload): string {
-    return jwt.sign(payload, env.JWT_SECRET, {
-      expiresIn: env.JWT_EXPIRES_IN,
+    return jwt.sign(payload, env.JWT_SECRET as string, {
+      expiresIn: env.JWT_EXPIRES_IN as any,
       issuer: 'split-ledger-api',
       audience: payload.tenantId,
     });
@@ -38,8 +38,8 @@ export class AuthService {
       tokenId,
     };
 
-    const token = jwt.sign(refreshPayload, env.REFRESH_TOKEN_SECRET, {
-      expiresIn: env.REFRESH_TOKEN_EXPIRES_IN,
+    const token = jwt.sign(refreshPayload, env.REFRESH_TOKEN_SECRET as string, {
+      expiresIn: env.REFRESH_TOKEN_EXPIRES_IN as any,
       issuer: 'split-ledger-api',
       audience: payload.tenantId,
     });
@@ -158,7 +158,7 @@ export class AuthService {
     };
 
     const key = `password_reset:${tokenId}`;
-    await setJSON<PasswordResetToken>(key, tokenData, 60 * 60); // 1 hour
+    await setWithExpiry(key, JSON.stringify(tokenData), 60 * 60); // 1 hour
 
     return tokenId;
   }

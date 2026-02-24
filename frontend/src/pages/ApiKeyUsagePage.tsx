@@ -84,7 +84,8 @@ export function ApiKeyUsagePage() {
     { label: 'Expenses', icon: <ExpensesIcon />, href: '/expenses' },
     { label: 'Groups', icon: <GroupsIcon />, href: '/groups' },
     { label: 'Settlements', icon: <SettlementsIcon />, href: '/settlements' },
-    { label: 'API Keys', icon: <KeyIcon />, href: '/dashboard/api-keys' },
+    { label: 'API Keys', icon: <KeyIcon />, href: '/dashboard/api-keys', active: true },
+    { label: 'Webhooks', icon: <WebhooksIcon />, href: '/dashboard/webhooks' },
     { label: 'Settings', icon: <SettingsIcon />, href: '/settings' },
     { label: 'Billing', icon: <BillingIcon />, href: '/dashboard/billing' },
   ];
@@ -442,6 +443,14 @@ function BillingIcon() {
   return (
     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+    </svg>
+  );
+}
+
+function WebhooksIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
     </svg>
   );
 }

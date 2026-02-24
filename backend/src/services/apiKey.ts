@@ -157,7 +157,7 @@ export class ApiKeyService {
 
     // Check hash (constant-time comparison to prevent timing attacks)
     const apiKey = result.rows[0];
-    if (!crypto.timingSafeEqual(Buffer.from(keyHash, 'hex'), Buffer.from(apiKey.key_hash, 'hex'))) {
+    if (!crypto.timingSafeEqual(Buffer.from(keyHash, 'hex'), Buffer.from((apiKey as any).key_hash, 'hex'))) {
       logger.warn({
         message: 'API key hash mismatch (possible attack)',
         keyPrefix,
@@ -290,7 +290,7 @@ export class ApiKeyService {
       [apiKeyId]
     );
 
-    const deleted = result.rowCount > 0;
+    const deleted = (result.rowCount ?? 0) > 0;
 
     if (deleted) {
       logger.info({

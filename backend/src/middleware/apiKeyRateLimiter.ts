@@ -132,9 +132,9 @@ export const apiKeyUsageTracker: RequestHandler = async (req, res, next) => {
   const originalEnd = res.end;
 
   // Override end to capture response data
-  res.end = function (...args: any[]) {
+  res.end = function (this: any, ...args: any[]): any {
     // Call original end
-    originalEnd.apply(this, args);
+    (originalEnd as any).apply(this, args);
 
     // Record usage asynchronously (fire and forget)
     const startTime = res.locals.startTime || Date.now();
@@ -147,8 +147,8 @@ export const apiKeyUsageTracker: RequestHandler = async (req, res, next) => {
         method: req.method,
         status_code: res.statusCode,
         response_time_ms: responseTime,
-        ip_address: req.ip || null,
-        user_agent: req.headers['user-agent'] || null,
+        ip_address: req.ip || undefined,
+        user_agent: req.headers['user-agent'] || undefined,
       },
       req.apiKey!.tenantId
     ).catch((error) => {
@@ -158,7 +158,7 @@ export const apiKeyUsageTracker: RequestHandler = async (req, res, next) => {
         apiKeyId: req.apiKey!.id,
       });
     });
-  };
+  } as any;
 
   // Store start time for response time calculation
   res.locals.startTime = Date.now();

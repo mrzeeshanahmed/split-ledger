@@ -84,6 +84,7 @@ export function BillingPage() {
     { label: 'Groups', icon: <GroupsIcon />, href: '/groups' },
     { label: 'Settlements', icon: <SettlementsIcon />, href: '/settlements' },
     { label: 'API Keys', icon: <KeyIcon />, href: '/dashboard/api-keys' },
+    { label: 'Webhooks', icon: <WebhooksIcon />, href: '/dashboard/webhooks' },
     { label: 'Settings', icon: <SettingsIcon />, href: '/settings' },
     { label: 'Billing', icon: <BillingIcon />, href: '/dashboard/billing', active: true },
   ];
@@ -114,10 +115,10 @@ export function BillingPage() {
 
   const usageMetrics: Array<{ key: string; label: string; metric: UsageMetric | undefined; unit?: string }> = billing
     ? [
-        { key: 'apiCalls', label: 'API Calls', metric: billing.usage.apiCalls },
-        { key: 'storageBytes', label: 'Storage', metric: billing.usage.storageBytes, unit: 'bytes' },
-        { key: 'activeUsers', label: 'Active Users', metric: billing.usage.activeUsers },
-      ]
+      { key: 'apiCalls', label: 'API Calls', metric: billing.usage.apiCalls },
+      { key: 'storageBytes', label: 'Storage', metric: billing.usage.storageBytes, unit: 'bytes' },
+      { key: 'activeUsers', label: 'Active Users', metric: billing.usage.activeUsers },
+    ]
     : [];
 
   const getProgressVariant = (percentage: number): 'primary' | 'warning' | 'error' => {
@@ -379,6 +380,14 @@ function CheckIcon() {
   return (
     <svg className="w-4 h-4 text-accent-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+function WebhooksIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
     </svg>
   );
 }
