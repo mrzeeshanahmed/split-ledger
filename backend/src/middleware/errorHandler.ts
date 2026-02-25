@@ -4,11 +4,11 @@ import logger from '../utils/logger.js';
 import { env } from '../config/env.js';
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
-  const requestLogger = logger.child({
+  const requestLogger = typeof logger.child === 'function' ? logger.child({
     requestId: req.requestId,
     path: req.path,
     method: req.method,
-  });
+  }) : logger;
 
   if (err instanceof AppError) {
     requestLogger.warn({
@@ -27,7 +27,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     stack: err.stack,
   });
 
-  const isDevelopment = env.NODE_ENV === 'development';
+  const isDevelopment = env.NODE_ENV !== 'production';
 
   res.status(500).json({
     error: {

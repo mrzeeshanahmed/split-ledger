@@ -41,7 +41,7 @@ describe('webhookWorker', () => {
     expect(() => startWebhookWorker()).not.toThrow();
   });
 
-  it('should not start twice', () => {
+  it('should not start twice', async () => {
     const logger = (await import('../../src/utils/logger.js')).default;
     startWebhookWorker();
     startWebhookWorker();

@@ -12,7 +12,7 @@ export interface TenantPoolConfig {
    * The tenant schema name (e.g., tenant_550e8400e29b41d4a716446655440000)
    */
   tenantSchema: string;
-  
+
   /**
    * Pool configuration options
    */
@@ -21,7 +21,7 @@ export interface TenantPoolConfig {
     idleTimeoutMillis?: number;
     connectionTimeoutMillis?: number;
   };
-  
+
   /**
    * Whether to validate the tenant schema exists before creating connections
    * @default true
@@ -40,9 +40,9 @@ export class TenantPool {
 
   constructor(config: TenantPoolConfig) {
     this.tenantSchema = config.tenantSchema;
-    
+
     const poolConfig = getDatabaseConfig();
-    
+
     this.pool = new PgPool({
       ...poolConfig,
       max: config.poolOptions?.max ?? 10,
@@ -89,7 +89,7 @@ export class TenantPool {
     callback: (client: TenantPoolClient) => Promise<T>
   ): Promise<T> {
     const client = await this.connect();
-    
+
     try {
       await client.query('BEGIN');
       const result = await callback(client);
@@ -142,7 +142,7 @@ export class TenantPoolClient {
         `SET search_path TO ${this.tenantSchema}, public`
       );
       this.searchPathSet = true;
-      
+
       logger.debug({
         message: 'Set search_path for tenant',
         tenantSchema: this.tenantSchema,
@@ -219,17 +219,17 @@ class TenantScopedDbManager {
    */
   getPool(tenantSchema: string): TenantPool {
     let pool = this.pools.get(tenantSchema);
-    
+
     if (!pool) {
       pool = new TenantPool({ tenantSchema });
       this.pools.set(tenantSchema, pool);
-      
+
       logger.debug({
         message: 'Created new tenant pool',
         tenantSchema,
       });
     }
-    
+
     return pool;
   }
 
@@ -272,7 +272,7 @@ class TenantScopedDbManager {
     if (pool) {
       await pool.end();
       this.pools.delete(tenantSchema);
-      
+
       logger.debug({
         message: 'Closed tenant pool',
         tenantSchema,
@@ -288,7 +288,7 @@ class TenantScopedDbManager {
     await Promise.all(closePromises);
     this.pools.clear();
     await this.defaultPool.end();
-    
+
     logger.info({
       message: 'Closed all tenant pools',
     });
@@ -319,7 +319,7 @@ export const tenantDb = new TenantScopedDbManager();
  * Helper function to get tenant schema name from tenant ID
  */
 export function getTenantSchema(tenantId: string): string {
-  return `tenant_${tenantId.replace(/-/g, '')}`;
+  return `tenant_${tenantId.replace(/[^a-zA-Z0-9]/g, '')}`;
 }
 
 /**

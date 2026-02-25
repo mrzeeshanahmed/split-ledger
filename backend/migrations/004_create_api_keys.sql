@@ -36,7 +36,7 @@ CREATE INDEX IF NOT EXISTS idx_api_keys_expires_at ON tenant_template.api_keys(e
 CREATE TRIGGER update_api_keys_updated_at
     BEFORE UPDATE ON tenant_template.api_keys
     FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
+    EXECUTE FUNCTION public.update_updated_at_column();
 
 -- DOWN
 DROP TRIGGER IF EXISTS update_api_keys_updated_at ON tenant_template.api_keys;

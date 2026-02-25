@@ -24,7 +24,7 @@ CREATE INDEX IF NOT EXISTS idx_webhooks_created_by ON tenant_template.webhooks(c
 CREATE TRIGGER update_webhooks_updated_at
     BEFORE UPDATE ON tenant_template.webhooks
     FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
+    EXECUTE FUNCTION public.update_updated_at_column();
 
 -- Create webhook_deliveries table in tenant_template schema
 CREATE TABLE IF NOT EXISTS tenant_template.webhook_deliveries (

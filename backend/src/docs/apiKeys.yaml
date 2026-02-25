@@ -1,0 +1,198 @@
+components:
+  schemas:
+    ApiKey:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        prefix: { type: string, example: 'pk_live_' }
+        name: { type: string }
+        scopes:
+          type: array
+          items: { type: string, enum: ['read', 'write', 'admin'] }
+        environment: { type: string, enum: ['test', 'production'] }
+        expiresAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+        lastUsedAt: { type: string, format: date-time, nullable: true }
+
+paths:
+  /api/api-keys:
+    get:
+      summary: List API keys
+      tags:
+        - API Keys
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      responses:
+        '200':
+          description: Returns list of API keys for the current tenant
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKeys:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      summary: Create a new API key
+      tags:
+        - API Keys
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name: { type: string, minLength: 1, maxLength: 100 }
+                environment: { type: string, enum: ['test', 'production'], default: 'test' }
+                scopes: 
+                  type: array
+                  items: { type: string, enum: ['read', 'write', 'admin'] }
+                  default: ['read']
+                expiresAt: { type: string, format: date-time, nullable: true }
+      responses:
+        '201':
+          description: API key created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKey:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      name: { type: string }
+                      key: { type: string, description: 'The plain-text API key (only returned once during creation)' }
+                      environment: { type: string }
+                      scopes: { type: array, items: { type: string } }
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /api/api-keys/{apiKeyId}:
+    parameters:
+      - in: path
+        name: apiKeyId
+        required: true
+        schema: { type: string, format: uuid }
+        description: The ID of the API key
+      - $ref: '#/components/parameters/TenantIdHeader'
+    get:
+      summary: Get details of an API key
+      tags:
+        - API Keys
+      responses:
+        '200':
+          description: Returns API key details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKey:
+                    $ref: '#/components/schemas/ApiKey'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    patch:
+      summary: Update an API key
+      tags:
+        - API Keys
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string, minLength: 1, maxLength: 100 }
+                scopes:
+                  type: array
+                  items: { type: string, enum: ['read', 'write', 'admin'] }
+      responses:
+        '200':
+          description: API key updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKey:
+                    $ref: '#/components/schemas/ApiKey'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    delete:
+      summary: Revoke an API key
+      tags:
+        - API Keys
+      responses:
+        '200':
+          description: API key successfully revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKey:
+                    $ref: '#/components/schemas/ApiKey'
+
+  /api/api-keys/{apiKeyId}/usage:
+    get:
+      summary: Get usage statistics for a specific API key
+      tags:
+        - API Keys
+      parameters:
+        - in: path
+          name: apiKeyId
+          required: true
+          schema: { type: string, format: uuid }
+          description: The ID of the API key
+        - $ref: '#/components/parameters/TenantIdHeader'
+      responses:
+        '200':
+          description: API key usage statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKeyId: { type: string, format: uuid }
+                  usage:
+                    type: object
+                    properties:
+                      totalRequests: { type: integer }
+                      successCount: { type: integer }
+                      errorCount: { type: integer }
+                      rateLimitedCount: { type: integer }
+
+  /api/api-keys/usage/summary:
+    get:
+      summary: Get aggregated usage across all API keys
+      tags:
+        - API Keys
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      responses:
+        '200':
+          description: Aggregated API usage summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stats:
+                    type: object
+                    properties:
+                      totalRequests: { type: integer }
+                      successCount: { type: integer }
+                      errorCount: { type: integer }

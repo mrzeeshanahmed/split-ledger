@@ -1,0 +1,107 @@
+
+> split-ledger-backend@0.1.0 test
+> vitest run tests/integration/auth.test.ts
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mD:/split_ledger/backend[39m
+
+ [33mΓ¥»[39m tests/integration/auth.test.ts [2m ([22m[2m4 tests[22m [2m|[22m [31m4 failed[39m[2m)[22m[33m 4066[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRegister ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated[39m
+[31m     ΓåÆ expected 200 to be 401 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRefresh token flow: using a valid refresh token generates a new access token[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mPassword reset: forgot ΓåÆ reset ΓåÆ login with new password[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRate limit: 11th login attempt within 15 min returns 429[39m
+[31m     ΓåÆ expected 500 to be 401 // Object.is equality[39m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 4 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Register ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated
+AssertionError: expected 200 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 200
+
+ Γ¥» tests/integration/auth.test.ts:118:35
+    116|             .set('Cookie', cookies);
+    117| 
+    118|         expect(resMeAfter.status).toBe(401);
+       |                                   ^
+    119|     });
+    120| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/4]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Refresh token flow: using a valid refresh token generates a new access token
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:149:35
+    147|             .set('Cookie', initialCookies);
+    148| 
+    149|         expect(resRefresh.status).toBe(200);
+       |                                   ^
+    150|         expect(resRefresh.headers['set-cookie']).toBeDefined();
+    151| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/4]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Password reset: forgot ΓåÆ reset ΓåÆ login with new password
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:181:34
+    179|             .send({ email: user1.email });
+    180| 
+    181|         expect(resForgot.status).toBe(200);
+       |                                  ^
+    182| 
+    183|         // Sniff the reset token from the DB to test the reset flow
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[3/4]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Rate limit: 11th login attempt within 15 min returns 429
+AssertionError: expected 500 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:228:38
+    226| 
+    227|             // 401 means auth failed but request was processed
+    228|             expect(resFailed.status).toBe(401);
+       |                                      ^
+    229|         }
+    230| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[4/4]ΓÄ»
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[90m (4)[39m
+[2m   Start at [22m 21:15:46
+[2m   Duration [22m 5.93s[2m (transform 425ms, setup 137ms, collect 1.24s, tests 4.07s, environment 0ms, prepare 133ms)[22m
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\split_ledger\backend
+npm error workspace split-ledger-backend@0.1.0
+npm error location D:\split_ledger\backend
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run tests/integration/auth.test.ts

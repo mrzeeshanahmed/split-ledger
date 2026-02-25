@@ -13,6 +13,7 @@ declare global {
         tenantId: string;
         rateLimitPerMinute: number;
         rateLimitPerDay: number;
+        createdBy: string;
       };
     }
   }
@@ -77,6 +78,7 @@ export const requireApiKey: RequestHandler = async (req, _res, next) => {
       tenantId,
       rateLimitPerMinute: apiKey.rate_limit_per_minute,
       rateLimitPerDay: apiKey.rate_limit_per_day,
+      createdBy: apiKey.created_by,
     };
 
     // Update last_used_at timestamp asynchronously (fire and forget)
@@ -98,9 +100,9 @@ export const requireApiKey: RequestHandler = async (req, _res, next) => {
     next();
   } catch (error) {
     if (error instanceof Error) {
-      throw new UnauthorizedError(error.message);
+      return next(new UnauthorizedError(error.message));
     }
-    next(error);
+    return next(error);
   }
 };
 
@@ -110,28 +112,28 @@ export const requireApiKey: RequestHandler = async (req, _res, next) => {
  */
 export const requireScope =
   (...requiredScopes: ApiKeyScope[]): RequestHandler =>
-  (req, _res, next) => {
-    if (!req.apiKey) {
-      throw new UnauthorizedError('API key authentication required');
-    }
+    (req, _res, next) => {
+      if (!req.apiKey) {
+        throw new UnauthorizedError('API key authentication required');
+      }
 
-    // Check if API key has at least one of the required scopes
-    const hasScope = requiredScopes.some((scope) => req.apiKey!.scopes.includes(scope));
+      // Check if API key has at least one of the required scopes
+      const hasScope = requiredScopes.some((scope) => req.apiKey!.scopes.includes(scope));
 
-    if (!hasScope) {
-      logger.warn({
-        message: 'Access denied: insufficient API key scope',
-        apiKeyId: req.apiKey.id,
-        requiredScopes,
-        availableScopes: req.apiKey.scopes,
-      });
-      throw new ForbiddenError(
-        `Insufficient permissions. Required scopes: ${requiredScopes.join(', ')}`
-      );
-    }
+      if (!hasScope) {
+        logger.warn({
+          message: 'Access denied: insufficient API key scope',
+          apiKeyId: req.apiKey.id,
+          requiredScopes,
+          availableScopes: req.apiKey.scopes,
+        });
+        throw new ForbiddenError(
+          `Insufficient permissions. Required scopes: ${requiredScopes.join(', ')}`
+        );
+      }
 
-    next();
-  };
+      next();
+    };
 
 /**
  * Optional API key authentication middleware
@@ -162,6 +164,7 @@ export const optionalApiKeyAuth: RequestHandler = async (req, _res, next) => {
       tenantId,
       rateLimitPerMinute: apiKey.rate_limit_per_minute,
       rateLimitPerDay: apiKey.rate_limit_per_day,
+      createdBy: apiKey.created_by,
     };
 
     ApiKeyService.updateLastUsed(apiKey.id, tenantId).catch(() => {

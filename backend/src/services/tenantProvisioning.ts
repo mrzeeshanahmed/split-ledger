@@ -23,7 +23,7 @@ export class TenantProvisioningService {
     const result = await transaction(async (client) => {
       // Create the tenant record
       const tenantId = randomUUID();
-      
+
       const { rows: tenantRows } = await client.query(
         `INSERT INTO tenants (id, name, subdomain, custom_domain, billing_email, owner_id)
          VALUES ($1, $2, $3, $4, $5, NULL)
@@ -39,12 +39,23 @@ export class TenantProvisioningService {
       // Create schema for tenant
       await client.query(`CREATE SCHEMA IF NOT EXISTS ${schemaName}`);
 
-      // Clone users table from template
-      await client.query(`
-        CREATE TABLE ${schemaName}.users (
-          LIKE tenant_template.users INCLUDING ALL
-        )
+      // Fetch all tables from the tenant_template schema
+      const { rows: tables } = await client.query(`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'tenant_template'
       `);
+
+      console.log('Tables cloned from tenant_template:', tables);
+
+      // Clone every table in tenant_template
+      for (const { table_name } of tables) {
+        await client.query(`
+          CREATE TABLE ${schemaName}.${table_name} (
+            LIKE tenant_template.${table_name} INCLUDING ALL
+          )
+        `);
+      }
 
       // Hash owner password
       const passwordHash = await bcrypt.hash(input.owner_password, SALT_ROUNDS);
@@ -167,7 +178,7 @@ export class TenantProvisioningService {
    */
   static async listTenantUsers(tenantId: string) {
     const schemaName = `tenant_${tenantId.replace(/-/g, '')}`;
-    
+
     const { rows } = await query(
       `SELECT id, email, first_name, last_name, role, status, email_verified, created_at, updated_at
        FROM ${schemaName}.users
@@ -182,7 +193,7 @@ export class TenantProvisioningService {
    */
   static async tenantSchemaExists(tenantId: string): Promise<boolean> {
     const schemaName = `tenant_${tenantId.replace(/-/g, '')}`;
-    
+
     const { rows } = await query(
       'SELECT 1 FROM information_schema.schemata WHERE schema_name = $1',
       [schemaName]

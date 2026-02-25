@@ -1,0 +1,161 @@
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mD:/split_ledger/backend[39m
+
+ [32mΓ£ô[39m tests/integration/tenantContext.test.ts [2m ([22m[2m16 tests[22m[2m)[22m[90m 121[2mms[22m[39m
+ [33mΓ¥»[39m tests/integration/apiKeys.test.ts [2m ([22m[2m3 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[33m 1199[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mCreate key ΓåÆ use key in request ΓåÆ verify auth succeeds[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mRevoke key ΓåÆ use key ΓåÆ verify 401 returned[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mScope check: key with read scope returns correctly while denied actions will fail[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+ [33mΓ¥»[39m tests/integration/auth.test.ts [2m ([22m[2m4 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[33m 4104[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRegister ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mPassword reset: forgot ΓåÆ reset ΓåÆ login with new password[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRate limit: 11th login attempt within 15 min returns 429[39m
+[31m     ΓåÆ expected 500 to be 401 // Object.is equality[39m
+ [33mΓ¥»[39m tests/integration/tenantIsolation.test.ts [2m ([22m[2m9 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[33m 20181[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mSearch Path Isolation[2m > [22mshould isolate data between tenants using search_path[39m
+[31m     ΓåÆ relation "users" does not exist[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mTenant Pool Management[2m > [22mshould create separate pools for different tenants[39m
+[31m     ΓåÆ expected 'public' to be 'tenant_0c3619943c7f4ae1b8e830404e2013ΓÇª' // Object.is equality[39m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Suites 1 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/9]ΓÄ»
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 8 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Create key ΓåÆ use key in request ΓåÆ verify auth succeeds
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/apiKeys.test.ts:94:31
+     92|             .set('Authorization', `Bearer ${rawKey}`);
+     93| 
+     94|         expect(resUse.status).toBe(200);
+       |                               ^
+     95|     });
+     96| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/9]ΓÄ»
+
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Revoke key ΓåÆ use key ΓåÆ verify 401 returned
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Scope check: key with read scope returns correctly while denied actions will fail
+TypeError: Cannot read properties of undefined (reading 'id')
+ Γ¥» tests/integration/apiKeys.test.ts:66:53
+     64|         // Clean all api keys
+     65|         const { rows: tenantRes } = await query('SELECT id FROM tenantΓÇª
+     66|         const schema = getTenantSchema(tenantRes[0].id);
+       |                                                     ^
+     67|         const client = await tenantDb.getClient(schema);
+     68|         await client.query('DELETE FROM api_keys');
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[3/9]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Register ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:93:33
+     91|             });
+     92| 
+     93|         expect(resLogin.status).toBe(200);
+       |                                 ^
+     94|         expect(resLogin.headers['set-cookie']).toBeDefined();
+     95|         cookies = (resLogin.headers['set-cookie'] as unknown as stringΓÇª
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[4/9]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Password reset: forgot ΓåÆ reset ΓåÆ login with new password
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:212:33
+    210|             });
+    211| 
+    212|         expect(resReset.status).toBe(200);
+       |                                 ^
+    213| 
+    214|         // Try loggin in with new password
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[5/9]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Rate limit: 11th login attempt within 15 min returns 429
+AssertionError: expected 500 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:240:38
+    238| 
+    239|             // 401 means auth failed but request was processed
+    240|             expect(resFailed.status).toBe(401);
+       |                                      ^
+    241|         }
+    242| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[6/9]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > Search Path Isolation > should isolate data between tenants using search_path
+error: relation "users" does not exist
+ Γ¥» ../node_modules/pg/lib/client.js:624:17
+ Γ¥» tests/integration/tenantIsolation.test.ts:88:7
+     86|       // Insert test data in tenant1
+     87|       const client1 = await tenantDb.getClient(tenant1Schema);
+     88|       await client1.query(
+       |       ^
+     89|         `INSERT INTO users (email, password_hash, first_name, last_namΓÇª
+     90|          VALUES ($1, $2, $3, $4, 'member', true)`,
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { length: 104, severity: 'ERROR', code: '42P01', detail: undefined, hint: undefined, position: '13', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, column: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', line: '1392', routine: 'parserOpenTable' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[7/9]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > Tenant Pool Management > should create separate pools for different tenants
+AssertionError: expected 'public' to be 'tenant_0c3619943c7f4ae1b8e830404e2013ΓÇª' // Object.is equality
+
+- Expected
++ Received
+
+- tenant_0c3619943c7f4ae1b8e830404e2013fd
++ public
+
+ Γ¥» tests/integration/tenantIsolation.test.ts:161:33
+    159|       const { rows: schema2 } = await client2.query('SELECT current_scΓÇª
+    160| 
+    161|       expect(schema1[0].schema).toBe(tenant1Schema);
+       |                                 ^
+    162|       expect(schema2[0].schema).toBe(tenant2Schema);
+    163| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[8/9]ΓÄ»
+
+[2m Test Files [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[31m8 failed[39m[22m[2m | [22m[1m[32m24 passed[39m[22m[90m (32)[39m
+[2m   Start at [22m 21:37:59
+[2m   Duration [22m 21.07s[2m (transform 521ms, setup 553ms, collect 2.92s, tests 25.61s, environment 1ms, prepare 551ms)[22m
+

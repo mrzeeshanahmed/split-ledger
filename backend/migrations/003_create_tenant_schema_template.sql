@@ -30,7 +30,7 @@ CREATE INDEX IF NOT EXISTS idx_users_status ON tenant_template.users(status);
 CREATE TRIGGER update_users_updated_at
     BEFORE UPDATE ON tenant_template.users
     FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
+    EXECUTE FUNCTION public.update_updated_at_column();
 
 -- DOWN
 DROP TRIGGER IF EXISTS update_users_updated_at ON tenant_template.users;

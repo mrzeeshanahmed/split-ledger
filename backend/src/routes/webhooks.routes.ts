@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { WebhookDispatcher } from '../services/webhookDispatcher.js';
 import { WEBHOOK_EVENTS } from '../config/webhookEvents.js';
-import { requireAuth, requireRole } from '../middleware/auth.js';
+import { requireAuth, requireRole, requireAuthOrApiKey } from '../middleware/index.js';
+import { ForbiddenError, UnauthorizedError } from '../errors/index.js';
 import { validate } from '../middleware/validate.js';
 import { NotFoundError } from '../errors/index.js';
 import logger from '../utils/logger.js';
@@ -129,8 +130,16 @@ router.post(
 router.get(
   '/',
   validate(listWebhooksSchema),
-  requireAuth,
-  requireRole('owner', 'admin'),
+  requireAuthOrApiKey,
+  (req, res, next) => {
+    if (req.user && !['owner', 'admin'].includes(req.user.role)) {
+      return next(new ForbiddenError('Insufficient permissions'));
+    }
+    if (req.apiKey && !req.apiKey.scopes.includes('read') && !req.apiKey.scopes.includes('write')) {
+      return next(new ForbiddenError('Insufficient scope'));
+    }
+    next();
+  },
   async (req, res, next) => {
     try {
       const tenantSchema = getTenantSchema(req.tenantId!);
@@ -154,13 +163,25 @@ router.get(
 router.post(
   '/',
   validate(createWebhookSchema),
-  requireAuth,
-  requireRole('owner', 'admin'),
+  requireAuthOrApiKey,
+  (req, res, next) => {
+    if (req.user && !['owner', 'admin'].includes(req.user.role)) {
+      return next(new ForbiddenError('Insufficient permissions'));
+    }
+    if (req.apiKey && !req.apiKey.scopes.includes('write')) {
+      return next(new ForbiddenError('Insufficient scope'));
+    }
+    next();
+  },
   async (req, res, next) => {
     try {
       const { url, events, description, secret } = req.body;
       const tenantSchema = getTenantSchema(req.tenantId!);
-      const createdBy = req.user!.id;
+      const createdBy = req.user?.id || req.apiKey?.createdBy;
+
+      if (!createdBy) {
+        throw new UnauthorizedError('User identity required to create webhook');
+      }
 
       const result = await WebhookDispatcher.createWebhook(
         tenantSchema,

@@ -186,7 +186,12 @@ describe('TenantProvisioningService', () => {
 
   describe('getTenantBySubdomain', () => {
     it('should retrieve tenant by subdomain', async () => {
-      const found = await TenantProvisioningService.getTenantBySubdomain('get-test');
+      const created = await TenantProvisioningService.provisionTenant({
+        ...validInput,
+        subdomain: 'get-test-by-sub',
+        owner_email: 'getsub@test.com',
+      });
+      const found = await TenantProvisioningService.getTenantBySubdomain('get-test-by-sub');
       expect(found).toBeDefined();
       expect(found?.name).toBe('Test Company');
     });

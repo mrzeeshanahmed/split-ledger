@@ -1,0 +1,489 @@
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mD:/split_ledger/backend[39m
+
+ [33mΓ¥»[39m tests/integration/tenantContext.test.ts [2m ([22m[2m16 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[90m 139[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantContext.test.ts[2m > [22mTenant Context Middleware[2m > [22mtenantContextMiddleware[2m > [22mshould throw error when tenant not found and required is true[39m
+[31m     ΓåÆ expected "spy" to be called with arguments: [ ObjectContaining{ΓÇª} ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[32m- Array [[90m
+[32m-   ObjectContaining {[90m
+[32m-     "message": "Tenant not found",[90m
+[32m-     "name": "AppError",[90m
+[32m-   },[90m
+[32m- ][90m
+[31m+ Array [][90m
+[31m[90m
+
+Number of calls: [1m1[22m
+[31m[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantContext.test.ts[2m > [22mTenant Context Middleware[2m > [22mtenantContextMiddleware[2m > [22mshould handle missing tenant when required is false[39m
+[31m     ΓåÆ expected '123e4567-e89b-12d3-a456-426614174000' to be undefined[39m
+ [33mΓ¥»[39m tests/integration/apiKeys.test.ts [2m ([22m[2m3 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[33m 1216[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mCreate key ΓåÆ use key in request ΓåÆ verify auth succeeds[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mRevoke key ΓåÆ use key ΓåÆ verify 401 returned[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mScope check: key with read scope returns correctly while denied actions will fail[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+ [33mΓ¥»[39m tests/integration/auth.test.ts [2m ([22m[2m4 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[33m 14159[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRegister ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mPassword reset: forgot ΓåÆ reset ΓåÆ login with new password[39m
+[31m     ΓåÆ column "reset_password_token" does not exist[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRate limit: 11th login attempt within 15 min returns 429[39m
+[31m     ΓåÆ expected 500 to be 401 // Object.is equality[39m
+ [33mΓ¥»[39m tests/integration/tenantIsolation.test.ts [2m ([22m[2m11 tests[22m [2m|[22m [31m4 failed[39m[2m)[22m[33m 22543[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mSearch Path Isolation[2m > [22mshould isolate data between tenants using search_path[39m
+[31m     ΓåÆ relation "users" does not exist[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mCross-Tenant Query Prevention[2m > [22mshould not allow querying other tenant schemas without explicit reference[39m
+[31m     ΓåÆ promise resolved "Result{ command: 'SELECT', ΓÇª(9) }" instead of rejecting[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mCross-Tenant Query Prevention[2m > [22mshould maintain isolation even with direct schema qualification[39m
+[31m     ΓåÆ relation "users" does not exist[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mgetTenantSchema helper[2m > [22mshould handle UUID with braces[39m
+[31m     ΓåÆ expected 'tenant_{550e8400e29b41d4a716446655440ΓÇª' to be 'tenant_550e8400e29b41d4a7164466554400ΓÇª' // Object.is equality[39m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Suites 2 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/14]ΓÄ»
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 12 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Create key ΓåÆ use key in request ΓåÆ verify auth succeeds
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/apiKeys.test.ts:94:31
+     92|             .set('Authorization', `Bearer ${rawKey}`);
+     93| 
+     94|         expect(resUse.status).toBe(200);
+       |                               ^
+     95|     });
+     96| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/14]ΓÄ»
+
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Revoke key ΓåÆ use key ΓåÆ verify 401 returned
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Scope check: key with read scope returns correctly while denied actions will fail
+TypeError: Cannot read properties of undefined (reading 'id')
+ Γ¥» tests/integration/apiKeys.test.ts:66:53
+     64|         // Clean all api keys
+     65|         const { rows: tenantRes } = await query('SELECT id FROM tenantΓÇª
+     66|         const schema = getTenantSchema(tenantRes[0].id);
+       |                                                     ^
+     67|         const client = await tenantDb.getClient(schema);
+     68|         await client.query('DELETE FROM api_keys');
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[3/14]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Register ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:93:33
+     91|             });
+     92| 
+     93|         expect(resLogin.status).toBe(200);
+       |                                 ^
+     94|         expect(resLogin.headers['set-cookie']).toBeDefined();
+     95|         cookies = (resLogin.headers['set-cookie'] as unknown as stringΓÇª
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[4/14]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Password reset: forgot ΓåÆ reset ΓåÆ login with new password
+error: column "reset_password_token" does not exist
+ Γ¥» ../node_modules/pg/lib/client.js:624:17
+ Γ¥» tests/integration/auth.test.ts:189:33
+    187|         const schema = getTenantSchema(tenantRes[0].id);
+    188|         const client = await tenantDb.getClient(schema);
+    189|         const { rows: users } = await client.query('SELECT reset_passwΓÇª
+       |                                 ^
+    190|         client.release();
+    191|         const resetToken = users[0].reset_password_token;
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { length: 119, severity: 'ERROR', code: '42703', detail: undefined, hint: undefined, position: '8', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, column: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', line: '3665', routine: 'errorMissingColumn' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[5/14]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Rate limit: 11th login attempt within 15 min returns 429
+AssertionError: expected 500 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:230:38
+    228| 
+    229|             // 401 means auth failed but request was processed
+    230|             expect(resFailed.status).toBe(401);
+       |                                      ^
+    231|         }
+    232| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[6/14]ΓÄ»
+
+ FAIL  tests/integration/tenantContext.test.ts > Tenant Context Middleware > tenantContextMiddleware > should throw error when tenant not found and required is true
+AssertionError: expected "spy" to be called with arguments: [ ObjectContaining{ΓÇª} ]
+
+Received: 
+
+  1st spy call:
+
+- Array [
+-   ObjectContaining {
+-     "message": "Tenant not found",
+-     "name": "AppError",
+-   },
+- ]
++ Array []
+
+
+Number of calls: 1
+
+ Γ¥» tests/integration/tenantContext.test.ts:233:28
+    231|       );
+    232| 
+    233|       expect(nextFunction).toHaveBeenCalledWith(
+       |                            ^
+    234|         expect.objectContaining({
+    235|           name: 'AppError',
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[7/14]ΓÄ»
+
+ FAIL  tests/integration/tenantContext.test.ts > Tenant Context Middleware > tenantContextMiddleware > should handle missing tenant when required is false
+AssertionError: expected '123e4567-e89b-12d3-a456-426614174000' to be undefined
+ Γ¥» tests/integration/tenantContext.test.ts:284:36
+    282| 
+    283|       expect(nextFunction).toHaveBeenCalled();
+    284|       expect(mockRequest.tenantId).toBeUndefined();
+       |                                    ^
+    285|     });
+    286|   });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[8/14]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > Search Path Isolation > should isolate data between tenants using search_path
+error: relation "users" does not exist
+ Γ¥» ../node_modules/pg/lib/client.js:624:17
+ Γ¥» tests/integration/tenantIsolation.test.ts:88:7
+     86|       // Insert test data in tenant1
+     87|       const client1 = await tenantDb.getClient(tenant1Schema);
+     88|       await client1.query(
+       |       ^
+     89|         `INSERT INTO users (email, password_hash, first_name, last_namΓÇª
+     90|          VALUES ($1, $2, $3, $4, 'member', true)`,
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { length: 104, severity: 'ERROR', code: '42P01', detail: undefined, hint: undefined, position: '13', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, column: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', line: '1392', routine: 'parserOpenTable' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[9/14]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > Cross-Tenant Query Prevention > should not allow querying other tenant schemas without explicit reference
+AssertionError: promise resolved "Result{ command: 'SELECT', ΓÇª(9) }" instead of rejecting
+
+- Expected
++ Received
+
+- [Error: rejected promise]
++ Result {
++   "RowCtor": null,
++   "_parsers": Array [
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function parseDate],
++     [Function parseBool],
++     [Function parseDate],
++     [Function parseDate],
++     [Function parseDate],
++   ],
++   "_prebuiltEmptyResultObject": Object {
++     "created_at": null,
++     "email": null,
++     "email_verified": null,
++     "email_verified_at": null,
++     "first_name": null,
++     "id": null,
++     "last_login_at": null,
++     "last_name": null,
++     "password_hash": null,
++     "role": null,
++     "status": null,
++     "updated_at": null,
++   },
++   "_types": TypeOverrides {
++     "_types": Object {
++       "arrayParser": Object {
++         "create": [Function create],
++       },
++       "builtins": Object {
++         "ABSTIME": 702,
++         "ACLITEM": 1033,
++         "BIT": 1560,
++         "BOOL": 16,
++         "BPCHAR": 1042,
++         "BYTEA": 17,
++         "CHAR": 18,
++         "CID": 29,
++         "CIDR": 650,
++         "CIRCLE": 718,
++         "DATE": 1082,
++         "FLOAT4": 700,
++         "FLOAT8": 701,
++         "GTSVECTOR": 3642,
++         "INET": 869,
++         "INT2": 21,
++         "INT4": 23,
++         "INT8": 20,
++         "INTERVAL": 1186,
++         "JSON": 114,
++         "JSONB": 3802,
++         "MACADDR": 829,
++         "MACADDR8": 774,
++         "MONEY": 790,
++         "NUMERIC": 1700,
++         "OID": 26,
++         "PATH": 602,
++         "PG_DEPENDENCIES": 3402,
++         "PG_LSN": 3220,
++         "PG_NDISTINCT": 3361,
++         "PG_NODE_TREE": 194,
++         "POLYGON": 604,
++         "REFCURSOR": 1790,
++         "REGCLASS": 2205,
++         "REGCONFIG": 3734,
++         "REGDICTIONARY": 3769,
++         "REGNAMESPACE": 4089,
++         "REGOPER": 2203,
++         "REGOPERATOR": 2204,
++         "REGPROC": 24,
++         "REGPROCEDURE": 2202,
++         "REGROLE": 4096,
++         "REGTYPE": 2206,
++         "RELTIME": 703,
++         "SMGR": 210,
++         "TEXT": 25,
++         "TID": 27,
++         "TIME": 1083,
++         "TIMESTAMP": 1114,
++         "TIMESTAMPTZ": 1184,
++         "TIMETZ": 1266,
++         "TINTERVAL": 704,
++         "TSQUERY": 3615,
++         "TSVECTOR": 3614,
++         "TXID_SNAPSHOT": 2970,
++         "UUID": 2950,
++         "VARBIT": 1562,
++         "VARCHAR": 1043,
++         "XID": 28,
++         "XML": 142,
++       },
++       "getTypeParser": [Function getTypeParser],
++       "setTypeParser": [Function setTypeParser],
++     },
++     "binary": Object {},
++     "text": Object {},
++   },
++   "command": "SELECT",
++   "fields": Array [
++     Field {
++       "columnID": 1,
++       "dataTypeID": 2950,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 16,
++       "format": "text",
++       "name": "id",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 2,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "email",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 3,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "password_hash",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 4,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "first_name",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 5,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "last_name",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 6,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "role",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 7,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "status",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 8,
++       "dataTypeID": 1184,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 8,
++       "format": "text",
++       "name": "last_login_at",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 9,
++       "dataTypeID": 16,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 1,
++       "format": "text",
++       "name": "email_verified",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 10,
++       "dataTypeID": 1184,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 8,
++       "format": "text",
++       "name": "email_verified_at",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 11,
++       "dataTypeID": 1184,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 8,
++       "format": "text",
++       "name": "created_at",
++       "tableID": 26575,
++     },
++     Field {
++       "columnID": 12,
++       "dataTypeID": 1184,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 8,
++       "format": "text",
++       "name": "updated_at",
++       "tableID": 26575,
++     },
++   ],
++   "oid": null,
++   "rowAsArray": false,
++   "rowCount": 1,
++   "rows": Array [
++     Object {
++       "created_at": 2026-02-24T16:00:15.890Z,
++       "email": "owner@globex.com",
++       "email_verified": true,
++       "email_verified_at": null,
++       "first_name": "Jane",
++       "id": "6032af69-54ca-48de-a41e-e39c1b7aa00c",
++       "last_login_at": null,
++       "last_name": "Smith",
++       "password_hash": "$2b$12$XymL4d8pXTO..iKlneikN.seBcqybKITzlb5E2P6OibDaWBBEuf36",
++       "role": "owner",
++       "status": "active",
++       "updated_at": 2026-02-24T16:00:15.890Z,
++     },
++   ],
++ }
+
+ Γ¥» tests/integration/tenantIsolation.test.ts:140:7
+    138|       await expect(
+    139|         client1.query(`SELECT * FROM ${tenant2Schema}.users`)
+    140|       ).rejects.toThrow();
+       |       ^
+    141| 
+    142|       client1.release();
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[10/14]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > Cross-Tenant Query Prevention > should maintain isolation even with direct schema qualification
+error: relation "users" does not exist
+ Γ¥» ../node_modules/pg/lib/client.js:624:17
+ Γ¥» tests/integration/tenantIsolation.test.ts:151:7
+    149|       // Insert data in both tenants
+    150|       const client1 = await tenantDb.getClient(tenant1Schema);
+    151|       await client1.query(
+       |       ^
+    152|         `INSERT INTO users (email, password_hash, first_name, last_namΓÇª
+    153|          VALUES ($1, $2, $3, $4, 'member', true)`,
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { length: 104, severity: 'ERROR', code: '42P01', detail: undefined, hint: undefined, position: '13', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, column: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', line: '1392', routine: 'parserOpenTable' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[11/14]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > getTenantSchema helper > should handle UUID with braces
+AssertionError: expected 'tenant_{550e8400e29b41d4a716446655440ΓÇª' to be 'tenant_550e8400e29b41d4a7164466554400ΓÇª' // Object.is equality
+
+- Expected
++ Received
+
+- tenant_550e8400e29b41d4a716446655440000
++ tenant_{550e8400e29b41d4a716446655440000}
+
+ Γ¥» tests/integration/tenantIsolation.test.ts:316:37
+    314|       const expected = 'tenant_550e8400e29b41d4a716446655440000';
+    315|       
+    316|       expect(getTenantSchema(uuid)).toBe(expected);
+       |                                     ^
+    317|     });
+    318|   });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[12/14]ΓÄ»
+
+[2m Test Files [22m [1m[31m4 failed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[31m12 failed[39m[22m[2m | [22m[1m[32m22 passed[39m[22m[90m (34)[39m
+[2m   Start at [22m 21:30:12
+[2m   Duration [22m 23.37s[2m (transform 524ms, setup 489ms, collect 2.85s, tests 38.06s, environment 1ms, prepare 562ms)[22m
+

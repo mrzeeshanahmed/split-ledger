@@ -219,7 +219,7 @@ describe('Tenant Context Middleware', () => {
       vi.mocked(TenantProvisioningService.getTenant).mockResolvedValue(null as any);
 
       mockRequest.headers = {
-        'x-tenant-id': 'nonexistent-id',
+        'x-tenant-id': '00000000-0000-0000-0000-000000000000',
       };
 
       const middleware = tenantContextMiddleware({ required: true });
@@ -267,7 +267,7 @@ describe('Tenant Context Middleware', () => {
 
     it('should handle missing tenant when required is false', async () => {
       mockRequest.headers = {
-        'x-tenant-id': 'nonexistent',
+        'x-tenant-id': '00000000-0000-0000-0000-000000000000',
       };
 
       vi.mocked(TenantProvisioningService.getTenant).mockResolvedValue(null as any);

@@ -1,0 +1,161 @@
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mD:/split_ledger/backend[39m
+
+ [32mΓ£ô[39m tests/integration/tenantContext.test.ts [2m ([22m[2m16 tests[22m[2m)[22m[90m 115[2mms[22m[39m
+stderr | tests/integration/auth.test.ts > Auth Flow Integration Tests > Register ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated
+login failed in auth: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>TypeError: __vite_ssr_import_1__.default.child is not a function<br> &nbsp; &nbsp;at errorHandler (D:\split_ledger\backend\src\middleware\errorHandler.ts:7:32)<br> &nbsp; &nbsp;at Layer.handle_error (D:\split_ledger\node_modules\express\lib\router\layer.js:71:5)<br> &nbsp; &nbsp;at trim_prefix (D:\split_ledger\node_modules\express\lib\router\index.js:326:13)<br> &nbsp; &nbsp;at D:\split_ledger\node_modules\express\lib\router\index.js:286:9<br> &nbsp; &nbsp;at router.process_params (D:\split_ledger\node_modules\express\lib\router\index.js:346:12)<br> &nbsp; &nbsp;at next (D:\split_ledger\node_modules\express\lib\router\index.js:280:10)<br> &nbsp; &nbsp;at Layer.handle_error (D:\split_ledger\node_modules\express\lib\router\layer.js:67:12)<br> &nbsp; &nbsp;at trim_prefix (D:\split_ledger\node_modules\express\lib\router\index.js:326:13)<br> &nbsp; &nbsp;at D:\split_ledger\node_modules\express\lib\router\index.js:286:9<br> &nbsp; &nbsp;at router.process_params (D:\split_ledger\node_modules\express\lib\router\index.js:346:12)</pre>
+</body>
+</html>
+
+
+stderr | tests/integration/apiKeys.test.ts > API Keys Integration Tests > Revoke key ΓåÆ use key ΓåÆ verify 401 returned
+login failed in beforeEach apiKeys: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>TypeError: __vite_ssr_import_1__.default.child is not a function<br> &nbsp; &nbsp;at errorHandler (D:\split_ledger\backend\src\middleware\errorHandler.ts:7:32)<br> &nbsp; &nbsp;at Layer.handle_error (D:\split_ledger\node_modules\express\lib\router\layer.js:71:5)<br> &nbsp; &nbsp;at trim_prefix (D:\split_ledger\node_modules\express\lib\router\index.js:326:13)<br> &nbsp; &nbsp;at D:\split_ledger\node_modules\express\lib\router\index.js:286:9<br> &nbsp; &nbsp;at router.process_params (D:\split_ledger\node_modules\express\lib\router\index.js:346:12)<br> &nbsp; &nbsp;at next (D:\split_ledger\node_modules\express\lib\router\index.js:280:10)<br> &nbsp; &nbsp;at Layer.handle_error (D:\split_ledger\node_modules\express\lib\router\layer.js:67:12)<br> &nbsp; &nbsp;at trim_prefix (D:\split_ledger\node_modules\express\lib\router\index.js:326:13)<br> &nbsp; &nbsp;at D:\split_ledger\node_modules\express\lib\router\index.js:286:9<br> &nbsp; &nbsp;at router.process_params (D:\split_ledger\node_modules\express\lib\router\index.js:346:12)</pre>
+</body>
+</html>
+
+
+stderr | tests/integration/apiKeys.test.ts > API Keys Integration Tests > Scope check: key with read scope returns correctly while denied actions will fail
+login failed in beforeEach apiKeys: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>TypeError: __vite_ssr_import_1__.default.child is not a function<br> &nbsp; &nbsp;at errorHandler (D:\split_ledger\backend\src\middleware\errorHandler.ts:7:32)<br> &nbsp; &nbsp;at Layer.handle_error (D:\split_ledger\node_modules\express\lib\router\layer.js:71:5)<br> &nbsp; &nbsp;at trim_prefix (D:\split_ledger\node_modules\express\lib\router\index.js:326:13)<br> &nbsp; &nbsp;at D:\split_ledger\node_modules\express\lib\router\index.js:286:9<br> &nbsp; &nbsp;at router.process_params (D:\split_ledger\node_modules\express\lib\router\index.js:346:12)<br> &nbsp; &nbsp;at next (D:\split_ledger\node_modules\express\lib\router\index.js:280:10)<br> &nbsp; &nbsp;at Layer.handle_error (D:\split_ledger\node_modules\express\lib\router\layer.js:67:12)<br> &nbsp; &nbsp;at trim_prefix (D:\split_ledger\node_modules\express\lib\router\index.js:326:13)<br> &nbsp; &nbsp;at D:\split_ledger\node_modules\express\lib\router\index.js:286:9<br> &nbsp; &nbsp;at router.process_params (D:\split_ledger\node_modules\express\lib\router\index.js:346:12)</pre>
+</body>
+</html>
+
+
+ [33mΓ¥»[39m tests/integration/apiKeys.test.ts [2m ([22m[2m3 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[33m 1135[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mCreate key ΓåÆ use key in request ΓåÆ verify auth succeeds[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mRevoke key ΓåÆ use key ΓåÆ verify 401 returned[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mScope check: key with read scope returns correctly while denied actions will fail[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+stderr | tests/integration/auth.test.ts > Auth Flow Integration Tests > Password reset: forgot ΓåÆ reset ΓåÆ login with new password
+reset failed in auth: {}
+
+ [33mΓ¥»[39m tests/integration/auth.test.ts [2m ([22m[2m4 tests[22m [2m|[22m [31m4 failed[39m[2m)[22m[33m 3506[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRegister ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRefresh token flow: using a valid refresh token generates a new access token[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mPassword reset: forgot ΓåÆ reset ΓåÆ login with new password[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRate limit: 11th login attempt within 15 min returns 429[39m
+[31m     ΓåÆ expected 500 to be 401 // Object.is equality[39m
+ [32mΓ£ô[39m tests/integration/tenantIsolation.test.ts [2m ([22m[2m9 tests[22m[2m)[22m[33m 10480[2mms[22m[39m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 7 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Create key ΓåÆ use key in request ΓåÆ verify auth succeeds
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Revoke key ΓåÆ use key ΓåÆ verify 401 returned
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Scope check: key with read scope returns correctly while denied actions will fail
+TypeError: Cannot read properties of undefined (reading 'id')
+ Γ¥» tests/integration/apiKeys.test.ts:71:53
+     69|         // Clean all api keys
+     70|         const { rows: tenantRes } = await query('SELECT id FROM tenantΓÇª
+     71|         const schema = getTenantSchema(tenantRes[0].id);
+       |                                                     ^
+     72|         const client = await tenantDb.getClient(schema);
+     73|         await client.query('DELETE FROM api_keys');
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/7]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Register ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:97:33
+     95|         }
+     96| 
+     97|         expect(resLogin.status).toBe(200);
+       |                                 ^
+     98|         expect(resLogin.headers['set-cookie']).toBeDefined();
+     99|         cookies = (resLogin.headers['set-cookie'] as unknown as stringΓÇª
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/7]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Refresh token flow: using a valid refresh token generates a new access token
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:155:35
+    153|             .set('Cookie', initialCookies);
+    154| 
+    155|         expect(resRefresh.status).toBe(200);
+       |                                   ^
+    156|         expect(resRefresh.headers['set-cookie']).toBeDefined();
+    157| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[3/7]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Password reset: forgot ΓåÆ reset ΓåÆ login with new password
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:220:33
+    218|         }
+    219| 
+    220|         expect(resReset.status).toBe(200);
+       |                                 ^
+    221| 
+    222|         // Try loggin in with new password
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[4/7]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Rate limit: 11th login attempt within 15 min returns 429
+AssertionError: expected 500 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:248:38
+    246| 
+    247|             // 401 means auth failed but request was processed
+    248|             expect(resFailed.status).toBe(401);
+       |                                      ^
+    249|         }
+    250| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[5/7]ΓÄ»
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[31m7 failed[39m[22m[2m | [22m[1m[32m25 passed[39m[22m[90m (32)[39m
+[2m   Start at [22m 21:57:42
+[2m   Duration [22m 11.67s[2m (transform 531ms, setup 502ms, collect 3.18s, tests 15.24s, environment 1ms, prepare 585ms)[22m
+

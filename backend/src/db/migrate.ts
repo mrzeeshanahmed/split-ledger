@@ -45,7 +45,7 @@ const getMigrationFiles = async (): Promise<string[]> => {
 };
 
 const parseMigrationFile = (content: string): { up: string; down: string | null } => {
-  const downDelimiter = '-- DOWN --';
+  const downDelimiter = '-- DOWN';
   const downIndex = content.indexOf(downDelimiter);
 
   if (downIndex === -1) {

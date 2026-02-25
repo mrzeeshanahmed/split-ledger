@@ -7,7 +7,7 @@ export {
   getCurrentTenantId,
   getCurrentTenantSchema
 } from './tenantContext.js';
-export { requireAuth, requireRole, optionalAuth } from './auth.js';
+export { requireAuth, requireRole, optionalAuth, requireAuthOrApiKey } from './auth.js';
 export { validate } from './validate.js';
 export {
   authRateLimiter,

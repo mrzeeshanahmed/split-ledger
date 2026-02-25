@@ -1,0 +1,617 @@
+
+> split-ledger-backend@0.1.0 test
+> vitest run
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mD:/split_ledger/backend[39m
+
+ [32mΓ£ô[39m tests/index.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 65[2mms[22m[39m
+ [32mΓ£ô[39m tests/services/webhookWorker.test.ts [2m ([22m[2m3 tests[22m[2m)[22m[90m 97[2mms[22m[39m
+ [33mΓ¥»[39m tests/services/webhookDispatcher.test.ts [2m ([22m[2m9 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[90m 151[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/services/webhookDispatcher.test.ts[2m > [22mWebhookDispatcher[2m > [22mdispatchWebhookEvent[2m > [22mshould create delivery records and enqueue jobs for matching webhooks[39m
+[31m     ΓåÆ expected "spy" to be called once, but got 0 times[39m
+[31m   [33mΓ¥»[31m tests/services/webhookDispatcher.test.ts[2m > [22mWebhookDispatcher[2m > [22mdispatchWebhookEvent[2m > [22mshould enqueue one job per matching webhook[39m
+[31m     ΓåÆ expected "spy" to be called 2 times, but got 0 times[39m
+[31m   [33mΓ¥»[31m tests/services/webhookDispatcher.test.ts[2m > [22mWebhookDispatcher[2m > [22mrequeueDeadDelivery[2m > [22mshould reset attempt_count and enqueue delivery when dead[39m
+[31m     ΓåÆ expected "spy" to be called once, but got 0 times[39m
+ [33mΓ¥»[39m tests/integration/tenantContext.test.ts [2m ([22m[2m16 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[90m 193[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantContext.test.ts[2m > [22mTenant Context Middleware[2m > [22mtenantContextMiddleware[2m > [22mshould throw error when tenant not found and required is true[39m
+[31m     ΓåÆ expected "spy" to be called with arguments: [ ObjectContaining{ΓÇª} ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[32m- Array [[90m
+[32m-   ObjectContaining {[90m
+[32m-     "message": "Tenant not found",[90m
+[32m-     "name": "AppError",[90m
+[32m-   },[90m
+[32m- ][90m
+[31m+ Array [][90m
+[31m[90m
+
+Number of calls: [1m1[22m
+[31m[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantContext.test.ts[2m > [22mTenant Context Middleware[2m > [22mtenantContextMiddleware[2m > [22mshould handle missing tenant when required is false[39m
+[31m     ΓåÆ expected '123e4567-e89b-12d3-a456-426614174000' to be undefined[39m
+ [33mΓ¥»[39m tests/integration/apiKeys.test.ts [2m ([22m[2m3 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[33m 970[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mCreate key ΓåÆ use key in request ΓåÆ verify auth succeeds[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mRevoke key ΓåÆ use key ΓåÆ verify 401 returned[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+[31m   [33mΓ¥»[31m tests/integration/apiKeys.test.ts[2m > [22mAPI Keys Integration Tests[2m > [22mScope check: key with read scope returns correctly while denied actions will fail[39m
+[31m     ΓåÆ Cannot read properties of undefined (reading 'id')[39m
+ [33mΓ¥»[39m tests/services/auth.test.ts [2m ([22m[2m15 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[33m 2442[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/services/auth.test.ts[2m > [22mAuthService[2m > [22misRefreshTokenBlacklisted[2m > [22mshould check if token is blacklisted[39m
+[31m     ΓåÆ vi.mocked(...).mockReturnValue is not a function[39m
+[31m   [33mΓ¥»[31m tests/services/auth.test.ts[2m > [22mAuthService[2m > [22misRefreshTokenBlacklisted[2m > [22mshould return false if token is not blacklisted[39m
+[31m     ΓåÆ vi.mocked(...).mockReturnValue is not a function[39m
+ [33mΓ¥»[39m tests/routes/auth.test.ts [2m ([22m[2m6 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[33m 2112[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/routes/auth.test.ts[2m > [22mAuth Routes[2m > [22mPOST /api/auth/register[2m > [22mshould register a new user[39m
+[31m     ΓåÆ expected 500 to be less than 500[39m
+[31m   [33mΓ¥»[31m tests/routes/auth.test.ts[2m > [22mAuth Routes[2m > [22mPOST /api/auth/login[2m > [22mshould reject invalid credentials[39m
+[31m     ΓåÆ expected 500 to be 401 // Object.is equality[39m
+ [33mΓ¥»[39m tests/integration/auth.test.ts [2m ([22m[2m4 tests[22m [2m|[22m [31m4 failed[39m[2m)[22m[33m 3449[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRegister ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated[39m
+[31m     ΓåÆ expected 500 to be 201 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRefresh token flow: using a valid refresh token generates a new access token[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mPassword reset: forgot ΓåÆ reset ΓåÆ login with new password[39m
+[31m     ΓåÆ expected 500 to be 200 // Object.is equality[39m
+[31m   [33mΓ¥»[31m tests/integration/auth.test.ts[2m > [22mAuth Flow Integration Tests[2m > [22mRate limit: 11th login attempt within 15 min returns 429[39m
+[31m     ΓåÆ expected 500 to be 401 // Object.is equality[39m
+ [32mΓ£ô[39m tests/services/tenantProvisioning.test.ts [2m ([22m[2m18 tests[22m[2m)[22m[33m 6143[2mms[22m[39m
+ [33mΓ¥»[39m tests/integration/tenantIsolation.test.ts [2m ([22m[2m11 tests[22m [2m|[22m [31m4 failed[39m[2m)[22m[33m 22496[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mSearch Path Isolation[2m > [22mshould isolate data between tenants using search_path[39m
+[31m     ΓåÆ relation "users" does not exist[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mCross-Tenant Query Prevention[2m > [22mshould not allow querying other tenant schemas without explicit reference[39m
+[31m     ΓåÆ promise resolved "Result{ command: 'SELECT', ΓÇª(9) }" instead of rejecting[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mCross-Tenant Query Prevention[2m > [22mshould maintain isolation even with direct schema qualification[39m
+[31m     ΓåÆ relation "users" does not exist[39m
+[31m   [33mΓ¥»[31m tests/integration/tenantIsolation.test.ts[2m > [22mTenant Isolation Integration Tests[2m > [22mgetTenantSchema helper[2m > [22mshould handle UUID with braces[39m
+[31m     ΓåÆ expected 'tenant_{550e8400e29b41d4a716446655440ΓÇª' to be 'tenant_550e8400e29b41d4a7164466554400ΓÇª' // Object.is equality[39m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Suites 1 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/21]ΓÄ»
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 20 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Create key ΓåÆ use key in request ΓåÆ verify auth succeeds
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Revoke key ΓåÆ use key ΓåÆ verify 401 returned
+ FAIL  tests/integration/apiKeys.test.ts > API Keys Integration Tests > Scope check: key with read scope returns correctly while denied actions will fail
+TypeError: Cannot read properties of undefined (reading 'id')
+ Γ¥» tests/integration/apiKeys.test.ts:63:53
+     61|         // Clean all api keys
+     62|         const { rows: tenantRes } = await query('SELECT id FROM tenantΓÇª
+     63|         const schema = getTenantSchema(tenantRes[0].id);
+       |                                                     ^
+     64|         const client = await tenantDb.getClient(schema);
+     65|         await client.query('DELETE FROM api_keys');
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/21]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Register ΓåÆ login ΓåÆ get /auth/me ΓåÆ logout ΓåÆ verify token invalidated
+AssertionError: expected 500 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:77:36
+     75|             });
+     76| 
+     77|         expect(resRegister.status).toBe(201);
+       |                                    ^
+     78|         expect(resRegister.body.user.email).toBe(user1.email);
+     79|         expect(resRegister.headers['set-cookie']).toBeDefined();
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[3/21]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Refresh token flow: using a valid refresh token generates a new access token
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:148:35
+    146|             .set('Cookie', initialCookies);
+    147| 
+    148|         expect(resRefresh.status).toBe(200);
+       |                                   ^
+    149|         expect(resRefresh.headers['set-cookie']).toBeDefined();
+    150| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[4/21]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Password reset: forgot ΓåÆ reset ΓåÆ login with new password
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:180:34
+    178|             .send({ email: user1.email });
+    179| 
+    180|         expect(resForgot.status).toBe(200);
+       |                                  ^
+    181| 
+    182|         // Sniff the reset token from the DB to test the reset flow
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[5/21]ΓÄ»
+
+ FAIL  tests/integration/auth.test.ts > Auth Flow Integration Tests > Rate limit: 11th login attempt within 15 min returns 429
+AssertionError: expected 500 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 500
+
+ Γ¥» tests/integration/auth.test.ts:227:38
+    225| 
+    226|             // 401 means auth failed but request was processed
+    227|             expect(resFailed.status).toBe(401);
+       |                                      ^
+    228|         }
+    229| 
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[6/21]ΓÄ»
+
+ FAIL  tests/integration/tenantContext.test.ts > Tenant Context Middleware > tenantContextMiddleware > should throw error when tenant not found and required is true
+AssertionError: expected "spy" to be called with arguments: [ ObjectContaining{ΓÇª} ]
+
+Received: 
+
+  1st spy call:
+
+- Array [
+-   ObjectContaining {
+-     "message": "Tenant not found",
+-     "name": "AppError",
+-   },
+- ]
++ Array []
+
+
+Number of calls: 1
+
+ Γ¥» tests/integration/tenantContext.test.ts:233:28
+    231|       );
+    232| 
+    233|       expect(nextFunction).toHaveBeenCalledWith(
+       |                            ^
+    234|         expect.objectContaining({
+    235|           name: 'AppError',
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[7/21]ΓÄ»
+
+ FAIL  tests/integration/tenantContext.test.ts > Tenant Context Middleware > tenantContextMiddleware > should handle missing tenant when required is false
+AssertionError: expected '123e4567-e89b-12d3-a456-426614174000' to be undefined
+ Γ¥» tests/integration/tenantContext.test.ts:284:36
+    282| 
+    283|       expect(nextFunction).toHaveBeenCalled();
+    284|       expect(mockRequest.tenantId).toBeUndefined();
+       |                                    ^
+    285|     });
+    286|   });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[8/21]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > Search Path Isolation > should isolate data between tenants using search_path
+error: relation "users" does not exist
+ Γ¥» ../node_modules/pg/lib/client.js:624:17
+ Γ¥» tests/integration/tenantIsolation.test.ts:88:7
+     86|       // Insert test data in tenant1
+     87|       const client1 = await tenantDb.getClient(tenant1Schema);
+     88|       await client1.query(
+       |       ^
+     89|         `INSERT INTO users (email, password_hash, first_name, last_namΓÇª
+     90|          VALUES ($1, $2, $3, $4, 'member', true)`,
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { length: 104, severity: 'ERROR', code: '42P01', detail: undefined, hint: undefined, position: '13', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, column: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', line: '1392', routine: 'parserOpenTable' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[9/21]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > Cross-Tenant Query Prevention > should not allow querying other tenant schemas without explicit reference
+AssertionError: promise resolved "Result{ command: 'SELECT', ΓÇª(9) }" instead of rejecting
+
+- Expected
++ Received
+
+- [Error: rejected promise]
++ Result {
++   "RowCtor": null,
++   "_parsers": Array [
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function noParse],
++     [Function parseDate],
++     [Function parseBool],
++     [Function parseDate],
++     [Function parseDate],
++     [Function parseDate],
++   ],
++   "_prebuiltEmptyResultObject": Object {
++     "created_at": null,
++     "email": null,
++     "email_verified": null,
++     "email_verified_at": null,
++     "first_name": null,
++     "id": null,
++     "last_login_at": null,
++     "last_name": null,
++     "password_hash": null,
++     "role": null,
++     "status": null,
++     "updated_at": null,
++   },
++   "_types": TypeOverrides {
++     "_types": Object {
++       "arrayParser": Object {
++         "create": [Function create],
++       },
++       "builtins": Object {
++         "ABSTIME": 702,
++         "ACLITEM": 1033,
++         "BIT": 1560,
++         "BOOL": 16,
++         "BPCHAR": 1042,
++         "BYTEA": 17,
++         "CHAR": 18,
++         "CID": 29,
++         "CIDR": 650,
++         "CIRCLE": 718,
++         "DATE": 1082,
++         "FLOAT4": 700,
++         "FLOAT8": 701,
++         "GTSVECTOR": 3642,
++         "INET": 869,
++         "INT2": 21,
++         "INT4": 23,
++         "INT8": 20,
++         "INTERVAL": 1186,
++         "JSON": 114,
++         "JSONB": 3802,
++         "MACADDR": 829,
++         "MACADDR8": 774,
++         "MONEY": 790,
++         "NUMERIC": 1700,
++         "OID": 26,
++         "PATH": 602,
++         "PG_DEPENDENCIES": 3402,
++         "PG_LSN": 3220,
++         "PG_NDISTINCT": 3361,
++         "PG_NODE_TREE": 194,
++         "POLYGON": 604,
++         "REFCURSOR": 1790,
++         "REGCLASS": 2205,
++         "REGCONFIG": 3734,
++         "REGDICTIONARY": 3769,
++         "REGNAMESPACE": 4089,
++         "REGOPER": 2203,
++         "REGOPERATOR": 2204,
++         "REGPROC": 24,
++         "REGPROCEDURE": 2202,
++         "REGROLE": 4096,
++         "REGTYPE": 2206,
++         "RELTIME": 703,
++         "SMGR": 210,
++         "TEXT": 25,
++         "TID": 27,
++         "TIME": 1083,
++         "TIMESTAMP": 1114,
++         "TIMESTAMPTZ": 1184,
++         "TIMETZ": 1266,
++         "TINTERVAL": 704,
++         "TSQUERY": 3615,
++         "TSVECTOR": 3614,
++         "TXID_SNAPSHOT": 2970,
++         "UUID": 2950,
++         "VARBIT": 1562,
++         "VARCHAR": 1043,
++         "XID": 28,
++         "XML": 142,
++       },
++       "getTypeParser": [Function getTypeParser],
++       "setTypeParser": [Function setTypeParser],
++     },
++     "binary": Object {},
++     "text": Object {},
++   },
++   "command": "SELECT",
++   "fields": Array [
++     Field {
++       "columnID": 1,
++       "dataTypeID": 2950,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 16,
++       "format": "text",
++       "name": "id",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 2,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "email",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 3,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "password_hash",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 4,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "first_name",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 5,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "last_name",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 6,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "role",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 7,
++       "dataTypeID": 25,
++       "dataTypeModifier": -1,
++       "dataTypeSize": -1,
++       "format": "text",
++       "name": "status",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 8,
++       "dataTypeID": 1184,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 8,
++       "format": "text",
++       "name": "last_login_at",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 9,
++       "dataTypeID": 16,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 1,
++       "format": "text",
++       "name": "email_verified",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 10,
++       "dataTypeID": 1184,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 8,
++       "format": "text",
++       "name": "email_verified_at",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 11,
++       "dataTypeID": 1184,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 8,
++       "format": "text",
++       "name": "created_at",
++       "tableID": 18202,
++     },
++     Field {
++       "columnID": 12,
++       "dataTypeID": 1184,
++       "dataTypeModifier": -1,
++       "dataTypeSize": 8,
++       "format": "text",
++       "name": "updated_at",
++       "tableID": 18202,
++     },
++   ],
++   "oid": null,
++   "rowAsArray": false,
++   "rowCount": 1,
++   "rows": Array [
++     Object {
++       "created_at": 2026-02-24T15:16:11.235Z,
++       "email": "owner@globex.com",
++       "email_verified": true,
++       "email_verified_at": null,
++       "first_name": "Jane",
++       "id": "036b0031-1306-4d6f-b270-e5774468d290",
++       "last_login_at": null,
++       "last_name": "Smith",
++       "password_hash": "$2b$12$hc.dj0OY5zchob9yOX4ITObDYj3v3aBITR8zVYWTjMfosGwaCaNgS",
++       "role": "owner",
++       "status": "active",
++       "updated_at": 2026-02-24T15:16:11.235Z,
++     },
++   ],
++ }
+
+ Γ¥» tests/integration/tenantIsolation.test.ts:140:7
+    138|       await expect(
+    139|         client1.query(`SELECT * FROM ${tenant2Schema}.users`)
+    140|       ).rejects.toThrow();
+       |       ^
+    141| 
+    142|       client1.release();
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[10/21]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > Cross-Tenant Query Prevention > should maintain isolation even with direct schema qualification
+error: relation "users" does not exist
+ Γ¥» ../node_modules/pg/lib/client.js:624:17
+ Γ¥» tests/integration/tenantIsolation.test.ts:151:7
+    149|       // Insert data in both tenants
+    150|       const client1 = await tenantDb.getClient(tenant1Schema);
+    151|       await client1.query(
+       |       ^
+    152|         `INSERT INTO users (email, password_hash, first_name, last_namΓÇª
+    153|          VALUES ($1, $2, $3, $4, 'member', true)`,
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { length: 104, severity: 'ERROR', code: '42P01', detail: undefined, hint: undefined, position: '13', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, column: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', line: '1392', routine: 'parserOpenTable' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[11/21]ΓÄ»
+
+ FAIL  tests/integration/tenantIsolation.test.ts > Tenant Isolation Integration Tests > getTenantSchema helper > should handle UUID with braces
+AssertionError: expected 'tenant_{550e8400e29b41d4a716446655440ΓÇª' to be 'tenant_550e8400e29b41d4a7164466554400ΓÇª' // Object.is equality
+
+- Expected
++ Received
+
+- tenant_550e8400e29b41d4a716446655440000
++ tenant_{550e8400e29b41d4a716446655440000}
+
+ Γ¥» tests/integration/tenantIsolation.test.ts:316:37
+    314|       const expected = 'tenant_550e8400e29b41d4a716446655440000';
+    315|       
+    316|       expect(getTenantSchema(uuid)).toBe(expected);
+       |                                     ^
+    317|     });
+    318|   });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[12/21]ΓÄ»
+
+ FAIL  tests/services/auth.test.ts > AuthService > isRefreshTokenBlacklisted > should check if token is blacklisted
+TypeError: vi.mocked(...).mockReturnValue is not a function
+ Γ¥» tests/services/auth.test.ts:161:33
+    159|     it('should check if token is blacklisted', async () => {
+    160|       const tokenId = 'test-token-id';
+    161|       vi.mocked(getRedisClient).mockReturnValue({
+       |                                 ^
+    162|         exists: vi.fn().mockResolvedValue(1),
+    163|       } as any);
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[13/21]ΓÄ»
+
+ FAIL  tests/services/auth.test.ts > AuthService > isRefreshTokenBlacklisted > should return false if token is not blacklisted
+TypeError: vi.mocked(...).mockReturnValue is not a function
+ Γ¥» tests/services/auth.test.ts:172:33
+    170|     it('should return false if token is not blacklisted', async () => {
+    171|       const tokenId = 'test-token-id';
+    172|       vi.mocked(getRedisClient).mockReturnValue({
+       |                                 ^
+    173|         exists: vi.fn().mockResolvedValue(0),
+    174|       } as any);
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[14/21]ΓÄ»
+
+ FAIL  tests/services/webhookDispatcher.test.ts > WebhookDispatcher > dispatchWebhookEvent > should create delivery records and enqueue jobs for matching webhooks
+AssertionError: expected "spy" to be called once, but got 0 times
+ Γ¥» tests/services/webhookDispatcher.test.ts:127:27
+    125| 
+    126|       const redis = getRedisClient();
+    127|       expect(redis.rPush).toHaveBeenCalledOnce();
+       |                           ^
+    128| 
+    129|       const callArgs = vi.mocked(redis.rPush).mock.calls[0];
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[15/21]ΓÄ»
+
+ FAIL  tests/services/webhookDispatcher.test.ts > WebhookDispatcher > dispatchWebhookEvent > should enqueue one job per matching webhook
+AssertionError: expected "spy" to be called 2 times, but got 0 times
+ Γ¥» tests/services/webhookDispatcher.test.ts:188:27
+    186| 
+    187|       const redis = getRedisClient();
+    188|       expect(redis.rPush).toHaveBeenCalledTimes(2);
+       |                           ^
+    189|     });
+    190|   });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[16/21]ΓÄ»
+
+ FAIL  tests/services/webhookDispatcher.test.ts > WebhookDispatcher > requeueDeadDelivery > should reset attempt_count and enqueue delivery when dead
+AssertionError: expected "spy" to be called once, but got 0 times
+ Γ¥» tests/services/webhookDispatcher.test.ts:218:27
+    216| 
+    217|       const redis = getRedisClient();
+    218|       expect(redis.rPush).toHaveBeenCalledOnce();
+       |                           ^
+    219|     });
+    220|   });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[17/21]ΓÄ»
+
+ FAIL  tests/routes/auth.test.ts > Auth Routes > POST /api/auth/register > should register a new user
+AssertionError: expected 500 to be less than 500
+ Γ¥» tests/routes/auth.test.ts:99:31
+     97|       // Since mocking is complex, we just verify the structure
+     98|       expect(response.status).toBeGreaterThanOrEqual(200);
+     99|       expect(response.status).toBeLessThan(500);
+       |                               ^
+    100|     });
+    101|   });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[18/21]ΓÄ»
+
+ FAIL  tests/routes/auth.test.ts > Auth Routes > POST /api/auth/login > should reject invalid credentials
+AssertionError: expected 500 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 500
+
+ Γ¥» tests/routes/auth.test.ts:183:31
+    181|         .send(credentials);
+    182| 
+    183|       expect(response.status).toBe(401);
+       |                               ^
+    184|     });
+    185|   });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[19/21]ΓÄ»
+
+[2m Test Files [22m [1m[31m7 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m20 failed[39m[22m[2m | [22m[1m[32m66 passed[39m[22m[90m (86)[39m
+[2m   Start at [22m 20:46:06
+[2m   Duration [22m 23.99s[2m (transform 1.47s, setup 1.78s, collect 6.10s, tests 38.12s, environment 4ms, prepare 2.71s)[22m
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\split_ledger\backend
+npm error workspace split-ledger-backend@0.1.0
+npm error location D:\split_ledger\backend
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AuthService } from '../../src/services/auth.js';
-import { setWithExpiry, getJSON, deleteKey } from '../../src/db/redis.js';
+import { setWithExpiry, getJSON, deleteKey, getRedisClient } from '../../src/db/redis.js';
 
 // Mock Redis functions
 vi.mock('../../src/db/redis.js', () => ({

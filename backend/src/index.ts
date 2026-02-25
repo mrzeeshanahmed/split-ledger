@@ -22,6 +22,8 @@ import { connectRedis, closeRedis } from './db/redis.js';
 import { initializePaymentProvider } from './services/payment/paymentProvider.js';
 import { startScheduler } from './jobs/scheduler.js';
 import { startWebhookWorker, stopWebhookWorker } from './workers/webhookWorker.js';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger.js';
 
 const createApp = (): Application => {
   const app = express();
@@ -76,6 +78,16 @@ const createApp = (): Application => {
 
   // Analytics routes
   app.use('/api/analytics', analyticsRoutes);
+
+  // API Documentation (Swagger)
+  if (env.NODE_ENV !== 'production') {
+    app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+    // Raw JSON spec
+    app.get('/api/docs.json', (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(swaggerSpec);
+    });
+  }
 
   app.use(notFoundHandler);
   app.use(errorHandler);
@@ -147,6 +159,8 @@ const startServer = async (): Promise<void> => {
   }
 };
 
-startServer();
+if (process.env.NODE_ENV !== 'test') {
+  startServer();
+}
 
-export { createApp };
+export { createApp, startServer };

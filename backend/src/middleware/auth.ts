@@ -58,29 +58,43 @@ export const requireAuth: RequestHandler = (req, _res, next) => {
   }
 };
 
+import { requireApiKey } from './apiKeyAuth.js';
+
+/**
+ * Require authentication or API key middleware
+ * Allows access with either a valid user session or a valid API key
+ */
+export const requireAuthOrApiKey: RequestHandler = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && (authHeader.startsWith('Bearer sk_live_') || authHeader.startsWith('Bearer sk_test_'))) {
+    return requireApiKey(req, res, next);
+  }
+  return requireAuth(req, res, next);
+};
+
 /**
  * Require specific role middleware factory
  * Returns middleware that checks if user has required role
  */
 export const requireRole =
   (...allowedRoles: string[]): RequestHandler =>
-  (req, _res, next) => {
-    if (!req.user) {
-      throw new UnauthorizedError('Authentication required');
-    }
+    (req, _res, next) => {
+      if (!req.user) {
+        throw new UnauthorizedError('Authentication required');
+      }
 
-    if (!allowedRoles.includes(req.user.role)) {
-      logger.warn({
-        message: 'Access denied: insufficient role',
-        userId: req.user.id,
-        userRole: req.user.role,
-        requiredRoles: allowedRoles,
-      });
-      throw new ForbiddenError('Insufficient permissions');
-    }
+      if (!allowedRoles.includes(req.user.role)) {
+        logger.warn({
+          message: 'Access denied: insufficient role',
+          userId: req.user.id,
+          userRole: req.user.role,
+          requiredRoles: allowedRoles,
+        });
+        throw new ForbiddenError('Insufficient permissions');
+      }
 
-    next();
-  };
+      next();
+    };
 
 /**
  * Optional authentication middleware

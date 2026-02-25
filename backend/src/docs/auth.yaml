@@ -1,0 +1,255 @@
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user and provision a tenant
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Contains the access_token and refresh_token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      email: { type: string }
+                      firstName: { type: string }
+                      lastName: { type: string }
+                      role: { type: string }
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          description: Email already in use
+
+  /api/auth/login:
+    post:
+      summary: Authenticate user
+      tags:
+        - Authentication
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Contains the access_token and refresh_token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      email: { type: string }
+                      role: { type: string }
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/auth/logout:
+    post:
+      summary: Log out user and invalidate refresh token
+      tags:
+        - Authentication
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      responses:
+        '200':
+          description: Successfully logged out
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Cleared cookies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/auth/refresh:
+    post:
+      summary: Refresh access token
+      tags:
+        - Authentication
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      requestBody:
+        description: Refresh token (can also be passed via refresh_token cookie)
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200':
+          description: Access token refreshed
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Contains new access_token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/auth/me:
+    get:
+      summary: Get current authenticated user profile
+      tags:
+        - Authentication
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      responses:
+        '200':
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      email: { type: string, format: email }
+                      firstName: { type: string }
+                      lastName: { type: string }
+                      role: { type: string }
+                      status: { type: string }
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/auth/forgot-password:
+    post:
+      summary: Request a password reset email
+      tags:
+        - Authentication
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '200':
+          description: Reset request received (returns success even if email not found to prevent user enumeration)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+
+  /api/auth/reset-password:
+    post:
+      summary: Reset password using verification token
+      tags:
+        - Authentication
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - newPassword
+              properties:
+                token: { type: string }
+                newPassword: { type: string, format: password, minLength: 8 }
+      responses:
+        '200':
+          description: Password successfully reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+        '400':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code: { type: string, example: 'INVALID_TOKEN' }
+                      message: { type: string }

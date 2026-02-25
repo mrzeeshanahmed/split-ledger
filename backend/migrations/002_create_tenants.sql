@@ -23,7 +23,7 @@ CREATE INDEX IF NOT EXISTS idx_tenants_status ON tenants(status);
 CREATE INDEX IF NOT EXISTS idx_tenants_stripe_customer_id ON tenants(stripe_customer_id);
 
 -- Create function to update updated_at timestamp
-CREATE OR REPLACE FUNCTION update_updated_at_column()
+CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = NOW();
@@ -35,7 +35,7 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_tenants_updated_at
     BEFORE UPDATE ON tenants
     FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
+    EXECUTE FUNCTION public.update_updated_at_column();
 
 -- Insert reserved subdomains
 INSERT INTO tenants (name, subdomain, status, subscription_plan, subscription_status)
@@ -54,7 +54,7 @@ ON CONFLICT (subdomain) DO NOTHING;
 
 -- DOWN
 DROP TRIGGER IF EXISTS update_tenants_updated_at ON tenants;
-DROP FUNCTION IF EXISTS update_updated_at_column();
+DROP FUNCTION IF EXISTS public.update_updated_at_column();
 DROP INDEX IF EXISTS idx_tenants_stripe_customer_id;
 DROP INDEX IF EXISTS idx_tenants_status;
 DROP INDEX IF EXISTS idx_tenants_custom_domain;
