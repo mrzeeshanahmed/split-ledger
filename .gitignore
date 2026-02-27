@@ -24,3 +24,5 @@ pnpm-debug.log*
 
 # Bun lockfile (project uses npm)
 bun.lock
+
+docs/
