@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getWebhook, testWebhook } from '../../api/webhooks';
 import { Webhook, WebhookStats } from '../../types/webhooks';
@@ -31,19 +31,13 @@ export const WebhookDetailPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [isTesting, setIsTesting] = useState(false);
 
-    useEffect(() => {
-        if (id) {
-            fetchWebhookDetails();
-        }
-    }, [id]);
-
-    const fetchWebhookDetails = async () => {
+    const fetchWebhookDetails = useCallback(async () => {
         try {
             setLoading(true);
             const data = await getWebhook(id!);
             setWebhook(data.webhook);
             setStats(data.stats);
-        } catch (error) {
+        } catch {
             addToast({
                 message: 'Could not load webhook details.',
                 variant: 'error',
@@ -52,7 +46,13 @@ export const WebhookDetailPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, addToast, navigate]);
+
+    useEffect(() => {
+        if (id) {
+            fetchWebhookDetails();
+        }
+    }, [id, fetchWebhookDetails]);
 
     const handleTestEvent = async () => {
         if (!webhook) return;
@@ -63,7 +63,7 @@ export const WebhookDetailPage: React.FC = () => {
                 message: `Response: ${res.statusCode}. ${res.success ? 'Webhook test succeeded.' : 'Webhook test failed.'}`,
                 variant: res.success ? 'success' : 'error',
             });
-        } catch (error) {
+        } catch {
             addToast({
                 message: 'An error occurred during the test ping.',
                 variant: 'error',

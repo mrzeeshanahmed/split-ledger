@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getApiUsage } from '@/api/analytics';
@@ -110,7 +111,7 @@ export function ApiUsageTab() {
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#6b7280' }} dy={10} angle={-45} textAnchor="end" height={60} />
                                         <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(val) => `${val}%`} />
-                                        <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} formatter={(val: any) => `${val.toFixed(2)}%`} />
+                                        <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} formatter={(val: number | undefined) => `${Number(val || 0).toFixed(2)}%`} />
                                         <Bar dataKey="Error Rate" radius={[4, 4, 0, 0]} maxBarSize={40}>
                                             {endpointChartData.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={entry['Error Rate'] > 2 ? '#ef4444' : '#10b981'} />
@@ -132,7 +133,7 @@ export function ApiUsageTab() {
                     </GhostButton>
                 </CardHeader>
                 <CardContent>
-                    <DataTable data={latencies} columns={latencyColumns} rowKey={(row: any) => `${row.method}-${row.endpoint}`} emptyMessage="No latency data found" />
+                    <DataTable data={latencies as any[]} columns={latencyColumns as any[]} rowKey={(row: any) => `${row.method}-${row.endpoint}`} emptyMessage="No latency data found" />
                 </CardContent>
             </Card>
         </div>

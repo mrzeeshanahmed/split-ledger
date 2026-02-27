@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { WebhookDelivery } from '../../types/webhooks';
 import { getWebhookDelivery } from '../../api/webhooks';
-import { Button, StatusBadge, Spinner, useToast } from '../index';
+import { Button, Badge, Spinner, useToast } from '../index';
 
 interface DeliveryDetailDrawerProps {
     isOpen: boolean;
@@ -22,6 +22,19 @@ export const DeliveryDetailDrawer: React.FC<DeliveryDetailDrawerProps> = ({
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const fetchFullDelivery = async () => {
+            try {
+                setLoading(true);
+                const res = await getWebhookDelivery(delivery.webhookId, delivery.id);
+                setFullDelivery(res.delivery);
+            } catch {
+                addToast({ message: 'Could not load full delivery data.', variant: 'error' });
+                onClose(); // auto-close if failed
+            } finally {
+                setLoading(false);
+            }
+        };
+
         if (isOpen) {
             document.body.style.overflow = 'hidden';
             fetchFullDelivery();
@@ -29,33 +42,22 @@ export const DeliveryDetailDrawer: React.FC<DeliveryDetailDrawerProps> = ({
             document.body.style.overflow = '';
         }
         return () => { document.body.style.overflow = ''; };
-    }, [isOpen, delivery.id]);
+    }, [isOpen, delivery.id, delivery.webhookId, addToast, onClose]);
 
-    const fetchFullDelivery = async () => {
-        try {
-            setLoading(true);
-            const res = await getWebhookDelivery(delivery.webhookId, delivery.id);
-            setFullDelivery(res.delivery);
-        } catch (error) {
-            addToast({ message: 'Could not load full delivery data.', variant: 'error' });
-            onClose(); // auto-close if failed
-        } finally {
-            setLoading(false);
-        }
-    };
+
 
     if (!isOpen) return null;
 
     const displayData = fullDelivery || delivery;
 
-    const mapStatusToBadgeVariant = (status: string) => {
+    const renderStatusBadge = (status: string) => {
         switch (status) {
-            case 'delivered': return 'success';
-            case 'failed': return 'error';
-            case 'dead': return 'default';
-            case 'retrying': return 'warning';
-            case 'pending': return 'primary';
-            default: return 'default';
+            case 'delivered': return <Badge variant="success">Delivered</Badge>;
+            case 'failed': return <Badge variant="error">Failed</Badge>;
+            case 'dead': return <Badge variant="default">Dead</Badge>;
+            case 'retrying': return <Badge variant="warning">Retrying</Badge>;
+            case 'pending': return <Badge variant="warning">Pending</Badge>;
+            default: return <Badge variant="default">{status}</Badge>;
         }
     };
 
@@ -93,9 +95,7 @@ export const DeliveryDetailDrawer: React.FC<DeliveryDetailDrawerProps> = ({
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pb-4 border-b border-border-default">
                                 <div>
                                     <span className="block text-xs text-text-muted uppercase mb-1">Status</span>
-                                    <StatusBadge
-                                        status={mapStatusToBadgeVariant(displayData.status) as any}
-                                    />
+                                    {renderStatusBadge(displayData.status)}
                                 </div>
                                 <div>
                                     <span className="block text-xs text-text-muted uppercase mb-1">Triggered At</span>

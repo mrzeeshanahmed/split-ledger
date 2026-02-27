@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useCallback } from 'react';
 import { AdminLayout } from '@/components/layouts/AdminLayout';
 import { Card, CardHeader, CardTitle, CardContent, PrimaryButton } from '@/components';
@@ -77,10 +78,10 @@ export function TenantsPage() {
                                                 <td className="py-2 px-3 text-text-secondary">{t.subdomain}</td>
                                                 <td className="py-2 px-3">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${t.status === 'active'
-                                                            ? 'bg-green-100 text-green-700'
-                                                            : t.status === 'suspended'
-                                                                ? 'bg-yellow-100 text-yellow-700'
-                                                                : 'bg-red-100 text-red-700'
+                                                        ? 'bg-green-100 text-green-700'
+                                                        : t.status === 'suspended'
+                                                            ? 'bg-yellow-100 text-yellow-700'
+                                                            : 'bg-red-100 text-red-700'
                                                         }`}>
                                                         {t.status}
                                                     </span>

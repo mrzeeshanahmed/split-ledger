@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Webhook } from '../../types/webhooks';
@@ -12,7 +12,6 @@ import {
     DataTable,
     Column,
     Badge,
-    EmptyState,
     ConfirmationModal,
     StatusBadge,
     useToast,
@@ -32,7 +31,6 @@ export const WebhooksListPage: React.FC = () => {
 
     const [webhooks, setWebhooks] = useState<Webhook[]>([]);
     const [loading, setLoading] = useState(true);
-    const [total, setTotal] = useState(0);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(null);
@@ -42,13 +40,12 @@ export const WebhooksListPage: React.FC = () => {
 
     const [revealedSecret, setRevealedSecret] = useState<string | null>(null);
 
-    const fetchWebhooks = async () => {
+    const fetchWebhooks = useCallback(async () => {
         try {
             setLoading(true);
             const data = await getWebhooks();
             setWebhooks(data.webhooks);
-            setTotal(data.total);
-        } catch (error) {
+        } catch {
             addToast({
                 message: 'Failed to fetch webhook endpoints.',
                 variant: 'error',
@@ -56,11 +53,11 @@ export const WebhooksListPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [addToast]);
 
     useEffect(() => {
         fetchWebhooks();
-    }, []);
+    }, [fetchWebhooks]);
 
     const handleLogout = async () => {
         try {
@@ -128,7 +125,7 @@ export const WebhooksListPage: React.FC = () => {
                 variant: 'success',
             });
             fetchWebhooks();
-        } catch (error) {
+        } catch {
             addToast({
                 message: 'There was an error deleting the endpoint.',
                 variant: 'error',
@@ -148,7 +145,7 @@ export const WebhooksListPage: React.FC = () => {
                 variant: 'success',
             });
             fetchWebhooks();
-        } catch (error) {
+        } catch {
             addToast({
                 message: 'Could not toggle the active status of this webhook.',
                 variant: 'error',

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { WebhookDelivery } from '../../types/webhooks';
 import { getWebhookDeliveries, redeliverWebhook } from '../../api/webhooks';
 import {
     DataTable,
     Column,
-    StatusBadge,
+    Badge,
     Button,
     useToast,
 } from '../index';
@@ -28,18 +28,14 @@ export const DeliveryLogsTable: React.FC<DeliveryLogsTableProps> = ({ webhookId 
     // Drawer state
     const [selectedDelivery, setSelectedDelivery] = useState<WebhookDelivery | null>(null);
 
-    useEffect(() => {
-        fetchDeliveries();
-    }, [webhookId, currentPage]);
-
-    const fetchDeliveries = async () => {
+    const fetchDeliveries = useCallback(async () => {
         try {
             setLoading(true);
             const offset = (currentPage - 1) * pageSize;
             const data = await getWebhookDeliveries(webhookId, undefined, pageSize, offset);
             setDeliveries(data.deliveries);
             setTotalItems(data.total);
-        } catch (error) {
+        } catch {
             addToast({
                 message: 'Could not fetch delivery logs.',
                 variant: 'error',
@@ -47,7 +43,11 @@ export const DeliveryLogsTable: React.FC<DeliveryLogsTableProps> = ({ webhookId 
         } finally {
             setLoading(false);
         }
-    };
+    }, [webhookId, currentPage, addToast, pageSize]);
+
+    useEffect(() => {
+        fetchDeliveries();
+    }, [fetchDeliveries]);
 
     const handleRedeliver = async (deliveryId: string, ev?: React.MouseEvent) => {
         if (ev) ev.stopPropagation();
@@ -60,7 +60,7 @@ export const DeliveryLogsTable: React.FC<DeliveryLogsTableProps> = ({ webhookId 
             // Refresh list to show new pending delivery
             setCurrentPage(1);
             fetchDeliveries();
-        } catch (error) {
+        } catch {
             addToast({
                 message: 'Could not schedule a new delivery attempt.',
                 variant: 'error',
@@ -68,18 +68,18 @@ export const DeliveryLogsTable: React.FC<DeliveryLogsTableProps> = ({ webhookId 
         }
     };
 
-    const mapStatusToBadgeVariant = (status: string) => {
+    const renderStatusBadge = (status: string) => {
         switch (status) {
-            case 'delivered': return 'success';
-            case 'failed': return 'error';
-            case 'dead': return 'default';
-            case 'retrying': return 'warning';
-            case 'pending': return 'primary';
-            default: return 'default';
+            case 'delivered': return <Badge variant="success">Delivered</Badge>;
+            case 'failed': return <Badge variant="error">Failed</Badge>;
+            case 'dead': return <Badge variant="default">Dead</Badge>;
+            case 'retrying': return <Badge variant="warning">Retrying</Badge>;
+            case 'pending': return <Badge variant="warning">Pending</Badge>;
+            default: return <Badge variant="default">{status}</Badge>;
         }
     };
 
-    const columns: Column<any>[] = [
+    const columns: Column<WebhookDelivery>[] = [
         {
             key: 'eventType',
             header: 'Event Type',
@@ -88,11 +88,7 @@ export const DeliveryLogsTable: React.FC<DeliveryLogsTableProps> = ({ webhookId 
         {
             key: 'status',
             header: 'Status',
-            render: (status) => (
-                <StatusBadge
-                    status={mapStatusToBadgeVariant(String(status)) as any}
-                />
-            ),
+            render: (status) => renderStatusBadge(String(status)),
         },
         {
             key: 'attemptCount',
@@ -145,7 +141,7 @@ export const DeliveryLogsTable: React.FC<DeliveryLogsTableProps> = ({ webhookId 
                 data={deliveries}
                 rowKey="id"
                 loading={loading}
-                onRowClick={(row: any) => setSelectedDelivery(row)}
+                onRowClick={(row: WebhookDelivery) => setSelectedDelivery(row)}
                 emptyMessage="No deliveries logged for this endpoint yet."
                 striped
                 pagination={{

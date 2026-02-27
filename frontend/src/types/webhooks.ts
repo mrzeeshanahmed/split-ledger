@@ -15,7 +15,7 @@ export interface WebhookDelivery extends Record<string, unknown> {
     id: string;
     webhookId: string;
     eventType: string;
-    payload: Record<string, any>;
+    payload: Record<string, unknown>;
     status: WebhookStatus;
     attemptCount: number;
     nextRetryAt: string | null;

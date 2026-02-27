@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getChurn } from '@/api/analytics';
@@ -137,7 +138,7 @@ export function ChurnTab() {
                     </GhostButton>
                 </CardHeader>
                 <CardContent>
-                    <DataTable data={churnedTenants as any[]} columns={columns} rowKey="id" emptyMessage="No churned tenants found" />
+                    <DataTable data={churnedTenants as any[]} columns={columns as any[]} rowKey="id" emptyMessage="No churned tenants found" />
                 </CardContent>
             </Card>
         </div>

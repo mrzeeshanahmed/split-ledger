@@ -29,6 +29,18 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, web
     const isEditing = !!webhook;
 
     useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                setFetchingEvents(true);
+                const evs = await getAvailableEvents();
+                setAvailableEvents(evs);
+            } catch {
+                addToast({ message: 'Failed to load event types.', variant: 'error' });
+            } finally {
+                setFetchingEvents(false);
+            }
+        };
+
         if (isOpen) {
             fetchEvents();
             if (webhook) {
@@ -41,19 +53,7 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, web
                 setSelectedEvents([]);
             }
         }
-    }, [isOpen, webhook]);
-
-    const fetchEvents = async () => {
-        try {
-            setFetchingEvents(true);
-            const evs = await getAvailableEvents();
-            setAvailableEvents(evs);
-        } catch (error) {
-            addToast({ message: 'Failed to load event types.', variant: 'error' });
-        } finally {
-            setFetchingEvents(false);
-        }
-    };
+    }, [isOpen, webhook, addToast]);
 
     const handleToggleEvent = (eventName: string) => {
         if (selectedEvents.includes(eventName)) {
@@ -85,9 +85,10 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, web
                 addToast({ message: 'Webhook endpoint created.', variant: 'success' });
                 onSaved(res.secret);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const err = error as { response?: { data?: { error?: { message?: string } } } };
             addToast({
-                message: error?.response?.data?.error?.message || 'Could not save webhook.',
+                message: err?.response?.data?.error?.message || 'Could not save webhook.',
                 variant: 'error'
             });
         } finally {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import { AdminLayout } from '@/components/layouts/AdminLayout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, PrimaryButton } from '@/components';
@@ -210,8 +211,8 @@ export function PlatformSettingsPage() {
                                 </div>
                                 {testResult && (
                                     <div className={`mt-2 p-3 rounded-lg text-sm ${testResult.success
-                                            ? 'bg-green-50 border border-green-200 text-green-700'
-                                            : 'bg-red-50 border border-red-200 text-red-600'
+                                        ? 'bg-green-50 border border-green-200 text-green-700'
+                                        : 'bg-red-50 border border-red-200 text-red-600'
                                         }`}>
                                         {testResult.success ? '✓ Test email sent successfully!' : `✗ Failed: ${testResult.error}`}
                                     </div>

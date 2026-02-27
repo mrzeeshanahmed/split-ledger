@@ -4,8 +4,8 @@ import { Card, CardHeader, CardTitle, CardContent, StatCard } from '@/components
 import { getRevenueSummary, getAdminTenants } from '@/api/admin';
 
 export function AdminDashboardPage() {
-    const [summary, setSummary] = useState<any>(null);
-    const [recentTenants, setRecentTenants] = useState<any[]>([]);
+    const [summary, setSummary] = useState<Record<string, unknown> | null>(null);
+    const [recentTenants, setRecentTenants] = useState<Record<string, unknown>[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -43,22 +43,22 @@ export function AdminDashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <StatCard
                         label="Total Tenants"
-                        value={summary?.totalTenants ?? 0}
+                        value={Number(summary?.totalTenants ?? 0)}
                         className="bg-white"
                     />
                     <StatCard
                         label="Active Tenants"
-                        value={summary?.activeTenants ?? 0}
+                        value={Number(summary?.activeTenants ?? 0)}
                         className="bg-white"
                     />
                     <StatCard
                         label="Platform Revenue"
-                        value={`$${(summary?.platformFeeCollected ?? 0).toFixed(2)}`}
+                        value={`$${Number(summary?.platformFeeCollected ?? 0).toFixed(2)}`}
                         className="bg-white"
                     />
                     <StatCard
                         label="Total Volume"
-                        value={`$${(summary?.totalRevenue ?? 0).toFixed(2)}`}
+                        value={`$${Number(summary?.totalRevenue ?? 0).toFixed(2)}`}
                         className="bg-white"
                     />
                 </div>
@@ -83,10 +83,10 @@ export function AdminDashboardPage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {recentTenants.map((t: any) => (
-                                            <tr key={t.id} className="border-b border-border-subtle hover:bg-background-subtle">
-                                                <td className="py-2 px-3 font-medium">{t.name}</td>
-                                                <td className="py-2 px-3 text-text-secondary">{t.subdomain}</td>
+                                        {recentTenants.map((t) => (
+                                            <tr key={String(t.id)} className="border-b border-border-subtle hover:bg-background-subtle">
+                                                <td className="py-2 px-3 font-medium">{String(t.name)}</td>
+                                                <td className="py-2 px-3 text-text-secondary">{String(t.subdomain)}</td>
                                                 <td className="py-2 px-3">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${t.status === 'active'
                                                         ? 'bg-green-100 text-green-700'
@@ -94,11 +94,11 @@ export function AdminDashboardPage() {
                                                             ? 'bg-yellow-100 text-yellow-700'
                                                             : 'bg-red-100 text-red-700'
                                                         }`}>
-                                                        {t.status}
+                                                        {String(t.status)}
                                                     </span>
                                                 </td>
                                                 <td className="py-2 px-3 text-text-secondary">
-                                                    {new Date(t.created_at).toLocaleDateString()}
+                                                    {new Date(String(t.created_at)).toLocaleDateString()}
                                                 </td>
                                             </tr>
                                         ))}

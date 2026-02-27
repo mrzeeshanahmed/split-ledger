@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { format, subDays } from 'date-fns';
+import { format } from 'date-fns';
 import { getMRR, getChurn } from '@/api/analytics';
 import {
     StatCard,
@@ -12,8 +12,6 @@ import {
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 
 export function OverviewTab() {
-    const today = new Date();
-    const thirtyDaysAgo = subDays(today, 30);
 
     const { data: mrrData, isLoading: mrrLoading } = useQuery({
         queryKey: ['analytics', 'mrr', 'overview'],
@@ -118,7 +116,7 @@ export function OverviewTab() {
                                         <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(value) => `$${value}`} />
                                         <Tooltip
                                             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                                            formatter={(value: any) => [`$${Number(value).toFixed(2)}`, 'MRR']}
+                                            formatter={(value: number | undefined) => [`$${Number(value || 0).toFixed(2)}`, 'MRR']}
                                         />
                                         <Area type="monotone" dataKey="MRR" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorMrr)" />
                                     </AreaChart>
