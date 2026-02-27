@@ -14,15 +14,15 @@ export function getPaymentProvider(): IPaymentProvider {
   return paymentProvider;
 }
 
-export function initializePaymentProvider(type: PaymentProviderType = 'stripe'): void {
-  if (type === 'stripe') {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { StripePaymentProvider } = require('./stripeProvider.js');
+export async function initializePaymentProvider(type?: PaymentProviderType): Promise<void> {
+  const resolvedType = type ?? (env.STRIPE_SECRET_KEY !== 'NOT_SET' ? 'stripe' : 'mock');
+
+  if (resolvedType === 'stripe') {
+    const { StripePaymentProvider } = await import('./stripeProvider.js');
     paymentProvider = new StripePaymentProvider(env.STRIPE_SECRET_KEY);
     logger.info({ message: 'Initialized Stripe payment provider' });
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { MockPaymentProvider } = require('./mockProvider.js');
+    const { MockPaymentProvider } = await import('./mockProvider.js');
     paymentProvider = new MockPaymentProvider();
     logger.info({ message: 'Initialized Mock payment provider' });
   }

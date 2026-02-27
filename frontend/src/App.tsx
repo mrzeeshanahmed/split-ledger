@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from '@/components';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { ProtectedAdminRoute } from '@/components/auth/ProtectedAdminRoute';
 import {
   LoginPage,
   RegisterPage,
@@ -18,7 +19,21 @@ import {
   StripeConnectPage,
   WebhooksListPage,
   WebhookDetailPage,
+  LandingPage,
+  ExpensesPage,
+  GroupsPage,
+  SettlementsPage,
+  SettingsPage,
+  UsersPage,
+  TermsPage,
+  PrivacyPolicyPage,
+  CookiePolicyPage,
 } from '@/pages';
+import { AdminLoginPage } from '@/pages/admin/AdminLoginPage';
+import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage';
+import { TenantsPage as AdminTenantsPage } from '@/pages/admin/TenantsPage';
+import { RevenuePage as AdminRevenuePage } from '@/pages/admin/RevenuePage';
+import { PlatformSettingsPage } from '@/pages/admin/PlatformSettingsPage';
 
 /**
  * Create React Query client
@@ -36,6 +51,14 @@ const queryClient = new QueryClient({
  * App component with routing and providers
  */
 function App() {
+  React.useEffect(() => {
+    // Bootstrap CSRF token on app load if not present
+    if (typeof document !== 'undefined' && !document.cookie.includes('_csrf=')) {
+      // Use standard fetch to avoid axios interceptor side-effects on bootstrap
+      fetch('/api/auth/me').catch(() => { });
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
@@ -77,6 +100,46 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ApiKeyUsagePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/expenses"
+              element={
+                <ProtectedRoute>
+                  <ExpensesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/groups"
+              element={
+                <ProtectedRoute>
+                  <GroupsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/settlements"
+              element={
+                <ProtectedRoute>
+                  <SettlementsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/users"
+              element={
+                <ProtectedRoute>
+                  <UsersPage />
                 </ProtectedRoute>
               }
             />
@@ -133,8 +196,20 @@ function App() {
               }
             />
 
-            {/* Default redirect */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            {/* Platform Admin routes */}
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route path="/admin" element={<ProtectedAdminRoute><AdminDashboardPage /></ProtectedAdminRoute>} />
+            <Route path="/admin/tenants" element={<ProtectedAdminRoute><AdminTenantsPage /></ProtectedAdminRoute>} />
+            <Route path="/admin/revenue" element={<ProtectedAdminRoute><AdminRevenuePage /></ProtectedAdminRoute>} />
+            <Route path="/admin/settings" element={<ProtectedAdminRoute><PlatformSettingsPage /></ProtectedAdminRoute>} />
+
+            {/* Public Landing Page */}
+            <Route path="/" element={<LandingPage />} />
+
+            {/* Legal Pages */}
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/cookies" element={<CookiePolicyPage />} />
 
             {/* 404 - Redirect to dashboard if authenticated, otherwise login */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

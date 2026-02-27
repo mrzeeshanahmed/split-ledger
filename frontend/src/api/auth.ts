@@ -3,6 +3,7 @@ import type {
   AuthResponse,
   LoginCredentials,
   RegisterData,
+  RegisterTenantData,
   ForgotPasswordData,
   ResetPasswordData,
   User,
@@ -13,6 +14,14 @@ import type {
  */
 export async function register(data: RegisterData): Promise<AuthResponse> {
   const response = await api.post<AuthResponse>('/auth/register', data);
+  return response.data;
+}
+
+/**
+ * Register a new tenant and owner
+ */
+export async function registerTenant(data: RegisterTenantData): Promise<AuthResponse> {
+  const response = await api.post<AuthResponse>('/auth/register-tenant', data);
   return response.data;
 }
 

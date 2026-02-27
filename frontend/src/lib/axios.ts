@@ -22,6 +22,16 @@ api.interceptors.request.use(
     if (tenantId) {
       config.headers['X-Tenant-ID'] = tenantId;
     }
+
+    // CSRF: read token from cookie and send as header (double-submit pattern)
+    const csrfToken = document.cookie
+      .split('; ')
+      .find((c) => c.startsWith('_csrf='))
+      ?.split('=')[1];
+    if (csrfToken) {
+      config.headers['X-CSRF-Token'] = csrfToken;
+    }
+
     return config;
   },
   (error) => Promise.reject(error),
@@ -43,7 +53,18 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest.headers['X-Retry-Auth']) {
       try {
         originalRequest.headers['X-Retry-Auth'] = 'true';
-        await axios.post('/api/auth/refresh', {}, { withCredentials: true });
+
+        // Manually read CSRF token for the global axios call
+        const csrfToken = document.cookie
+          .split('; ')
+          .find((c) => c.startsWith('_csrf='))
+          ?.split('=')[1];
+
+        await axios.post('/api/auth/refresh', {}, {
+          withCredentials: true,
+          headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : {}
+        });
+
         return api(originalRequest);
       } catch (refreshError) {
         // Refresh failed, redirect to login

@@ -75,7 +75,7 @@ export function AnalyticsPage() {
 
     const topBar = (
         <TopBar
-            left={<span className="text-lg font-semibold text-text-primary">Split-Ledger</span>}
+            left={<img src="/src/assets/logo.png" alt="Split-Ledger Logo" className="h-8 object-contain" />}
             right={
                 <div className="flex items-center gap-4">
                     <span className="text-sm text-text-secondary">

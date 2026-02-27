@@ -113,7 +113,7 @@ export const redeliverWebhook = async (
 export const testWebhook = async (
     webhookId: string,
     eventType: string,
-    payload: any
+    payload: unknown
 ): Promise<WebhookTestResult> => {
     const response = await api.post(`/webhooks/${webhookId}/test`, {
         eventType,

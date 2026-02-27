@@ -7,6 +7,9 @@ import {
   TransferResult,
   BalanceResult,
   ChargeError,
+  ConnectAccountResult,
+  ConnectAccountLinkResult,
+  ConnectAccountStatusResult,
 } from '../../types/payment.js';
 import logger from '../../utils/logger.js';
 
@@ -238,5 +241,58 @@ export class StripePaymentProvider implements IPaymentProvider {
       code: 'unknown_error',
       message: error instanceof Error ? error.message : 'Unknown error occurred',
     };
+  }
+
+  // Stripe Connect methods
+
+  async createConnectAccount(tenantId: string, email: string): Promise<ConnectAccountResult> {
+    try {
+      const account = await this.stripe.accounts.create({
+        type: 'standard',
+        email,
+        metadata: { tenantId },
+      });
+
+      logger.info({ message: 'Stripe Connect account created', accountId: account.id, tenantId });
+      return { success: true, accountId: account.id };
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      logger.error({ message: 'Failed to create Connect account', error: msg, tenantId });
+      return { success: false, error: msg };
+    }
+  }
+
+  async createAccountLink(stripeAccountId: string, returnUrl: string, refreshUrl: string): Promise<ConnectAccountLinkResult> {
+    try {
+      const link = await this.stripe.accountLinks.create({
+        account: stripeAccountId,
+        return_url: returnUrl,
+        refresh_url: refreshUrl,
+        type: 'account_onboarding',
+      });
+
+      return { success: true, url: link.url };
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      logger.error({ message: 'Failed to create account link', error: msg, stripeAccountId });
+      return { success: false, error: msg };
+    }
+  }
+
+  async getConnectAccountStatus(stripeAccountId: string): Promise<ConnectAccountStatusResult> {
+    const account = await this.stripe.accounts.retrieve(stripeAccountId);
+
+    return {
+      accountId: account.id,
+      chargesEnabled: account.charges_enabled,
+      payoutsEnabled: account.payouts_enabled,
+      detailsSubmitted: account.details_submitted ?? false,
+      requirements: account.requirements?.currently_due || [],
+    };
+  }
+
+  async createConnectLoginLink(stripeAccountId: string): Promise<{ url: string }> {
+    const link = await this.stripe.accounts.createLoginLink(stripeAccountId);
+    return { url: link.url };
   }
 }

@@ -232,12 +232,37 @@ async function notifyTenantOwnerOnDeadDelivery(
   webhook: WebhookWithSecret,
   deliveryId: string,
 ): Promise<void> {
-  logger.info({
-    message: 'TODO: notify tenant owner of dead webhook delivery',
-    tenantSchema,
-    webhookId: webhook.id,
-    deliveryId,
-  });
+  try {
+    // Find the tenant owner's email
+    const { rows } = await tenantDb.query(
+      tenantSchema,
+      `SELECT email FROM users WHERE role = 'owner' LIMIT 1`
+    );
+
+    if (rows.length === 0) {
+      logger.warn({
+        message: 'No owner found for dead delivery notification',
+        tenantSchema,
+        deliveryId,
+      });
+      return;
+    }
+
+    const { EmailService } = await import('../services/email.js');
+    await EmailService.sendWebhookDeadLetterNotification(
+      rows[0].email,
+      webhook.url,
+      'webhook_delivery',
+      RETRY_DELAYS_MS.length + 1,
+    );
+  } catch (error) {
+    logger.error({
+      message: 'Failed to send dead delivery email notification',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      tenantSchema,
+      deliveryId,
+    });
+  }
 }
 
 async function pollQueue(): Promise<void> {

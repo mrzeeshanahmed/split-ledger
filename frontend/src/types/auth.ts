@@ -36,6 +36,13 @@ export interface RegisterData {
 }
 
 /**
+ * Tenant registration data
+ */
+export interface RegisterTenantData extends RegisterData {
+  workspaceName: string;
+}
+
+/**
  * Forgot password request
  */
 export interface ForgotPasswordData {
@@ -51,12 +58,22 @@ export interface ResetPasswordData {
 }
 
 /**
+ * Tenant definition
+ */
+export interface Tenant {
+  id: string;
+  name: string;
+  subdomain: string;
+}
+
+/**
  * Auth response from API
  */
 export interface AuthResponse {
   success: boolean;
   message: string;
   user?: User;
+  tenant?: Tenant;
 }
 
 /**

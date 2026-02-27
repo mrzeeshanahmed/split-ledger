@@ -198,6 +198,19 @@ export class AuthService {
   }
 
   /**
+   * Generate a random password for user invitations
+   */
+  static generateRandomPassword(length = 16): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+    const bytes = require('crypto').randomBytes(length);
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += chars[bytes[i] % chars.length];
+    }
+    return result;
+  }
+
+  /**
    * Generate both access and refresh tokens
    */
   static generateTokens(payload: TokenPayload): {

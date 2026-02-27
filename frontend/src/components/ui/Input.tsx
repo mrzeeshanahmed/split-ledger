@@ -29,7 +29,7 @@ export interface BaseFieldProps {
  */
 export interface InputFieldProps
   extends BaseFieldProps,
-    Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Left icon or element */
   leftElement?: React.ReactNode;
   /** Right icon or element */
@@ -41,7 +41,7 @@ export interface InputFieldProps
  */
 export interface TextAreaFieldProps
   extends BaseFieldProps,
-    TextareaHTMLAttributes<HTMLTextAreaElement> {
+  TextareaHTMLAttributes<HTMLTextAreaElement> {
   /** Number of rows */
   rows?: number;
 }
@@ -51,7 +51,7 @@ export interface TextAreaFieldProps
  */
 export interface SelectFieldProps
   extends BaseFieldProps,
-    Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
+  Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   /** Select options */
   options: Array<{ value: string; label: string; disabled?: boolean }>;
   /** Placeholder text */
@@ -137,13 +137,13 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             id={inputId}
             disabled={disabled}
             className={cn(
-              'w-full border rounded-lg bg-white transition-all duration-normal',
-              'placeholder:text-text-muted',
-              'focus:outline-none focus:ring-2 focus:border-primary-500 focus:ring-primary-500/30',
-              'disabled:bg-secondary-50 disabled:cursor-not-allowed disabled:text-text-muted',
+              'w-full border rounded-lg bg-white/5 text-white transition-all duration-300',
+              'placeholder:text-zinc-500',
+              'focus:outline-none focus:ring-2 focus:border-violet-500 focus:ring-violet-500/50 focus:bg-white/10',
+              'disabled:bg-white/5 disabled:cursor-not-allowed disabled:text-zinc-600 disabled:opacity-50',
               error
-                ? 'border-danger-500 focus:ring-danger-500/30 focus:border-danger-500'
-                : 'border-border-default',
+                ? 'border-red-500 focus:ring-red-500/50 focus:border-red-500'
+                : 'border-white/10 hover:border-white/20',
               sizeStyles[size],
               leftElement && 'pl-10',
               rightElement && 'pr-10',
@@ -198,14 +198,14 @@ export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>
           disabled={disabled}
           rows={rows}
           className={cn(
-            'w-full border rounded-lg bg-white transition-all duration-normal',
-            'placeholder:text-text-muted',
-            'focus:outline-none focus:ring-2 focus:border-primary-500 focus:ring-primary-500/30',
-            'disabled:bg-secondary-50 disabled:cursor-not-allowed disabled:text-text-muted',
+            'w-full border rounded-lg bg-white/5 text-white transition-all duration-300',
+            'placeholder:text-zinc-500',
+            'focus:outline-none focus:ring-2 focus:border-violet-500 focus:ring-violet-500/50 focus:bg-white/10',
+            'disabled:bg-white/5 disabled:cursor-not-allowed disabled:text-zinc-600 disabled:opacity-50',
             'resize-y',
             error
-              ? 'border-danger-500 focus:ring-danger-500/30 focus:border-danger-500'
-              : 'border-border-default',
+              ? 'border-red-500 focus:ring-red-500/50 focus:border-red-500'
+              : 'border-white/10 hover:border-white/20',
             sizeStyles[size],
             className,
           )}
@@ -252,14 +252,14 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
           id={inputId}
           disabled={disabled}
           className={cn(
-            'w-full border rounded-lg bg-white transition-all duration-normal',
-            'focus:outline-none focus:ring-2 focus:border-primary-500 focus:ring-primary-500/30',
-            'disabled:bg-secondary-50 disabled:cursor-not-allowed disabled:text-text-muted',
+            'w-full border rounded-lg bg-white/5 text-white transition-all duration-300',
+            'focus:outline-none focus:ring-2 focus:border-violet-500 focus:ring-violet-500/50 focus:bg-white/10',
+            'disabled:bg-white/5 disabled:cursor-not-allowed disabled:text-zinc-600 disabled:opacity-50',
             'appearance-none cursor-pointer',
             'bg-no-repeat bg-right',
             error
-              ? 'border-danger-500 focus:ring-danger-500/30 focus:border-danger-500'
-              : 'border-border-default',
+              ? 'border-red-500 focus:ring-red-500/50 focus:border-red-500'
+              : 'border-white/10 hover:border-white/20',
             sizeStyles[size],
             'pr-10',
             className,

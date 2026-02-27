@@ -80,15 +80,16 @@ export function Card({
   return (
     <div
       className={cn(
-        'bg-white border border-border-default rounded-lg',
+        'relative bg-secondary-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden',
         paddingStyles[padding],
         shadowStyles[shadow],
-        hover && 'hover:shadow-md hover:border-border-strong transition-all duration-normal cursor-pointer',
+        hover && 'hover:border-white/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer',
         className,
       )}
       {...props}
     >
-      {children}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <div className="relative z-10">{children}</div>
     </div>
   );
 }
@@ -208,7 +209,7 @@ export function StatCard({
           )}
         </div>
         {icon && (
-          <div className="p-2 bg-primary-50 text-primary-600 rounded-lg">
+          <div className="p-2 bg-primary-500/10 text-primary-500 rounded-lg">
             {icon}
           </div>
         )}
@@ -248,18 +249,18 @@ export function ActionCard({
     >
       <div className="flex items-start gap-3">
         {icon && (
-          <div className="flex-shrink-0 p-2 bg-secondary-100 text-secondary-600 rounded-lg group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors duration-normal">
+          <div className="flex-shrink-0 p-2 bg-secondary-100 text-secondary-600 rounded-lg group-hover:bg-primary-500/10 group-hover:text-primary-500 transition-colors duration-normal">
             {icon}
           </div>
         )}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 z-10">
           <h4 className="text-sm font-medium text-text-primary">{title}</h4>
           {description && (
             <p className="text-sm text-text-secondary mt-1 truncate-2">{description}</p>
           )}
         </div>
         {showArrow && onClick && (
-          <div className="flex-shrink-0 text-text-muted group-hover:text-primary-600 transition-colors duration-normal">
+          <div className="flex-shrink-0 text-text-muted group-hover:text-primary-500 transition-colors duration-normal z-10">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

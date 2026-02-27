@@ -1,0 +1,78 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-and-lint:
+    name: Run Tests & Linters
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Typecheck
+        working-directory: ./backend
+        run: npm run typecheck
+
+      - name: Lint
+        working-directory: ./backend
+        run: npm run lint
+
+      # Not running unit/integration tests here requiring DB unless services are mocked locally in CI.
+      # But you could add 'npm test' assuming docker-compose runs a test db in actions.
+
+  deploy:
+    name: Deploy
+    needs: test-and-lint
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Copy files to Production Server via SCP
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USERNAME }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          source: "."
+          target: "/opt/splitledger"
+          rm: false
+
+      - name: Execute Docker Compose on Production Server
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USERNAME }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            cd /opt/splitledger
+            # Ensure proper permissions are maintained
+            docker compose -f docker-compose.prod.yml up -d --build
+            
+            # Execute migrations against the running container
+            # Since node modules might not be on host, we run the script inside backend container
+            docker compose -f docker-compose.prod.yml exec -T app npm run migrate:up
+            
+            # Optional: Sleep a few seconds then curl health endpoint
+            sleep 10
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80/health)
+            if [ "$STATUS" -eq 200 ]; then
+              echo "Deployment successful. Health check passed."
+            else
+              echo "Health check failed with HTTP $STATUS!"
+              exit 1
+            fi

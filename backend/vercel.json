@@ -1,0 +1,25 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "api/index.ts",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "/api/index.ts"
+        }
+    ],
+    "crons": [
+        {
+            "path": "/api/cron/process-webhooks",
+            "schedule": "*/5 * * * *"
+        },
+        {
+            "path": "/api/cron/monthly-billing",
+            "schedule": "0 0 1 * *"
+        }
+    ]
+}

@@ -52,7 +52,7 @@ export const requireAuth: RequestHandler = (req, _res, next) => {
     next();
   } catch (error) {
     if (error instanceof Error) {
-      throw new UnauthorizedError(error.message);
+      return next(new UnauthorizedError(error.message));
     }
     next(error);
   }

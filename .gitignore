@@ -14,3 +14,13 @@ pnpm-debug.log*
 .idea/
 .vscode/
 *.swp
+
+# Debug & test output artifacts
+*.txt
+!README.txt
+
+# AI assistant memory
+.memory.md
+
+# Bun lockfile (project uses npm)
+bun.lock

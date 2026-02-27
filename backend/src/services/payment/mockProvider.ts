@@ -6,6 +6,9 @@ import {
   TransferResult,
   BalanceResult,
   ChargeError,
+  ConnectAccountResult,
+  ConnectAccountLinkResult,
+  ConnectAccountStatusResult,
 } from '../../types/payment.js';
 import logger from '../../utils/logger.js';
 
@@ -183,5 +186,35 @@ export class MockPaymentProvider implements IPaymentProvider {
       success: true,
       refundId,
     };
+  }
+
+  // Stripe Connect methods (mock)
+
+  async createConnectAccount(tenantId: string, email: string): Promise<ConnectAccountResult> {
+    const accountId = `mock_acct_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    logger.info({ message: '[Mock] Connect account created', accountId, tenantId, email });
+    return { success: true, accountId };
+  }
+
+  async createAccountLink(stripeAccountId: string, returnUrl: string, _refreshUrl: string): Promise<ConnectAccountLinkResult> {
+    const url = `${returnUrl}?mock_onboarding=complete&account=${stripeAccountId}`;
+    logger.info({ message: '[Mock] Account link created', stripeAccountId });
+    return { success: true, url };
+  }
+
+  async getConnectAccountStatus(stripeAccountId: string): Promise<ConnectAccountStatusResult> {
+    logger.info({ message: '[Mock] Getting Connect account status', stripeAccountId });
+    return {
+      accountId: stripeAccountId,
+      chargesEnabled: true,
+      payoutsEnabled: true,
+      detailsSubmitted: true,
+      requirements: [],
+    };
+  }
+
+  async createConnectLoginLink(stripeAccountId: string): Promise<{ url: string }> {
+    logger.info({ message: '[Mock] Connect login link created', stripeAccountId });
+    return { url: `https://dashboard.stripe.com/mock/${stripeAccountId}` };
   }
 }

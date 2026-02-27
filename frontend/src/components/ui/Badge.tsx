@@ -57,12 +57,12 @@ export interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
  * Badge variant styles
  */
 const badgeVariantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-secondary-100 text-secondary-700 border-transparent',
-  success: 'bg-accent-50 text-accent-700 border-transparent',
-  warning: 'bg-warning-50 text-warning-700 border-transparent',
-  error: 'bg-danger-50 text-danger-700 border-transparent',
-  info: 'bg-info-50 text-info-700 border-transparent',
-  outline: 'bg-transparent text-text-primary border-border-default',
+  default: 'bg-secondary-500/10 text-secondary-400 border border-secondary-500/20',
+  success: 'bg-accent-500/10 text-accent-400 border border-accent-500/20',
+  warning: 'bg-warning-500/10 text-warning-400 border border-warning-500/20',
+  error: 'bg-danger-500/10 text-danger-400 border border-danger-500/20',
+  info: 'bg-info-500/10 text-info-400 border border-info-500/20',
+  outline: 'bg-transparent text-text-primary border border-border-default',
 };
 
 /**
@@ -134,7 +134,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 font-medium rounded-full border',
+        'inline-flex items-center gap-1 font-medium rounded-full',
         badgeVariantStyles[variant],
         badgeSizeStyles[size],
         className,

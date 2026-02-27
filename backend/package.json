@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "migrate:up": "tsx src/db/migrate.ts up",
     "migrate:down": "tsx src/db/migrate.ts down",
+    "seed": "tsx scripts/seed.ts",
     "migrate:create": "tsx src/db/migrate.ts create"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "node-cron": "^4.2.1",
+    "nodemailer": "^8.0.1",
     "pg": "^8.11.3",
     "rate-limit-redis": "^4.0.0",
     "redis": "^5.0.0",
@@ -45,6 +47,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.19.33",
     "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^7.0.11",
     "@types/pg": "^8.10.9",
     "@types/supertest": "^6.0.2",
     "@types/swagger-jsdoc": "^6.0.4",

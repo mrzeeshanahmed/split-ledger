@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { WebhookDispatcher } from '../services/webhookDispatcher.js';
 import { WEBHOOK_EVENTS } from '../config/webhookEvents.js';
 import { requireAuth, requireRole, requireAuthOrApiKey } from '../middleware/index.js';
+import { apiKeyRateLimiter } from '../middleware/apiKeyRateLimiter.js';
 import { ForbiddenError, UnauthorizedError } from '../errors/index.js';
 import { validate } from '../middleware/validate.js';
 import { NotFoundError } from '../errors/index.js';
@@ -131,6 +132,7 @@ router.get(
   '/',
   validate(listWebhooksSchema),
   requireAuthOrApiKey,
+  apiKeyRateLimiter,
   (req, res, next) => {
     if (req.user && !['owner', 'admin'].includes(req.user.role)) {
       return next(new ForbiddenError('Insufficient permissions'));
@@ -164,6 +166,7 @@ router.post(
   '/',
   validate(createWebhookSchema),
   requireAuthOrApiKey,
+  apiKeyRateLimiter,
   (req, res, next) => {
     if (req.user && !['owner', 'admin'].includes(req.user.role)) {
       return next(new ForbiddenError('Insufficient permissions'));

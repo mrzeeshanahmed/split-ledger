@@ -50,6 +50,26 @@ export function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
+  // Initialize auth if not done yet
+  React.useEffect(() => {
+    if (!isInitialized) {
+      import('@/api/auth').then(({ getCurrentUser }) => {
+        useAuthStore.getState().setIsLoading(true);
+        getCurrentUser()
+          .then((user) => {
+            setUser(user);
+          })
+          .catch(() => {
+            setUser(null);
+          })
+          .finally(() => {
+            useAuthStore.getState().setIsLoading(false);
+            useAuthStore.getState().setIsInitialized(true);
+          });
+      });
+    }
+  }, [isInitialized, setUser]);
+
   // Redirect if already authenticated
   if (isAuthenticated) {
     const from = (location.state as { from?: Location })?.from?.pathname || '/dashboard';
@@ -124,14 +144,14 @@ export function LoginPage() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 rounded border-border-default text-primary-600 focus:ring-primary-500"
+                className="h-4 w-4 rounded border-border-default text-violet-500 focus:ring-primary-500"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-text-secondary">
                 Remember me
               </label>
             </div>
 
-            <Link to="/forgot-password" className="text-sm font-medium text-primary-600 hover:text-primary-700">
+            <Link to="/forgot-password" className="text-sm font-medium text-violet-500 hover:text-violet-400">
               Forgot password?
             </Link>
           </div>
@@ -144,7 +164,7 @@ export function LoginPage() {
 
           <p className="text-center text-sm text-text-secondary">
             Don&apos;t have an account?{' '}
-            <Link to="/register" className="font-medium text-primary-600 hover:text-primary-700">
+            <Link to="/register" className="font-medium text-violet-500 hover:text-violet-400">
               Create an account
             </Link>
           </p>

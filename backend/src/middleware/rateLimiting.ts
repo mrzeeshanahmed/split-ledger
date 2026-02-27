@@ -1,8 +1,8 @@
-import rateLimit from 'express-rate-limit';
+import rateLimit, { Options } from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import { getRedisClient } from '../db/redis.js';
 import { TooManyRequestsError } from '../errors/index.js';
-import type { Request } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 
 /**
  * Get rate limit key that includes IP and tenant
@@ -13,11 +13,41 @@ const getRateLimitKey = (req: Request): string => {
   return `${ip}:${tenantId}`;
 };
 
+const isDev = process.env.NODE_ENV === 'development';
+
+/**
+ * Helper to create a lazy rate limiter that initializes its store on first use.
+ * In development/test mode, uses in-memory store with relaxed limits.
+ */
+const createLazyLimiter = (options: Partial<Options>, devOptions?: { devMax?: number }) => {
+  let limiter: any;
+
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!limiter) {
+      const skipRedis = isDev || process.env.NODE_ENV === 'test';
+      limiter = rateLimit({
+        ...options,
+        // Use relaxed limits in dev if provided
+        max: (isDev && devOptions?.devMax) ? devOptions.devMax : options.max,
+        store: skipRedis
+          ? undefined
+          : new RedisStore({
+            sendCommand: async (...args: string[]) => {
+              const redis = getRedisClient();
+              return redis.sendCommand(args) as any;
+            },
+          }),
+      });
+    }
+    return limiter(req, res, next);
+  };
+};
+
 /**
  * Rate limiter for authentication endpoints
  * 10 requests per 15 minutes per IP per tenant
  */
-export const authRateLimiter = rateLimit({
+export const authRateLimiter = createLazyLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10,
   standardHeaders: true,
@@ -28,28 +58,20 @@ export const authRateLimiter = rateLimit({
       'Too many authentication attempts. Please try again later.'
     );
   },
-  store: process.env.NODE_ENV === 'test'
-    ? undefined // Use memory store in tests
-    : new RedisStore({
-        sendCommand: async (...args: string[]) => {
-          const redis = getRedisClient();
-          return redis.sendCommand(args) as any;
-        },
-      }),
   skip: (req) => {
-    // Skip rate limiting for health checks and development if needed
+    // Skip rate limiting for health checks
     if (req.path === '/health' || req.path === '/ready') {
       return true;
     }
     return false;
   },
-});
+}, { devMax: 100 });
 
 /**
  * Strict rate limiter for password reset endpoints
  * 3 requests per hour per IP per tenant
  */
-export const passwordResetLimiter = rateLimit({
+export const passwordResetLimiter = createLazyLimiter({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 3,
   standardHeaders: true,
@@ -60,21 +82,13 @@ export const passwordResetLimiter = rateLimit({
       'Too many password reset attempts. Please try again later.'
     );
   },
-  store: process.env.NODE_ENV === 'test'
-    ? undefined
-    : new RedisStore({
-        sendCommand: async (...args: string[]) => {
-          const redis = getRedisClient();
-          return redis.sendCommand(args) as any;
-        },
-      }),
-});
+}, { devMax: 50 });
 
 /**
  * General API rate limiter
  * 100 requests per 15 minutes per IP per tenant
  */
-export const apiRateLimiter = rateLimit({
+export const apiRateLimiter = createLazyLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
   standardHeaders: true,
@@ -85,25 +99,13 @@ export const apiRateLimiter = rateLimit({
       'Too many requests. Please try again later.'
     );
   },
-  store: process.env.NODE_ENV === 'test'
-    ? undefined
-    : new RedisStore({
-        sendCommand: async (...args: string[]) => {
-          const redis = getRedisClient();
-          return redis.sendCommand(args) as any;
-        },
-      }),
-  skip: (req) => {
-    // Skip for authenticated users (use user-specific limiters instead)
-    return !!req.user;
-  },
 });
 
 /**
  * User-specific rate limiter
  * 200 requests per 15 minutes per user
  */
-export const userRateLimiter = rateLimit({
+export const userRateLimiter = createLazyLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 200,
   standardHeaders: true,
@@ -118,14 +120,6 @@ export const userRateLimiter = rateLimit({
       'Too many requests. Please try again later.'
     );
   },
-  store: process.env.NODE_ENV === 'test'
-    ? undefined
-    : new RedisStore({
-        sendCommand: async (...args: string[]) => {
-          const redis = getRedisClient();
-          return redis.sendCommand(args) as any;
-        },
-      }),
   skip: (req) => {
     // Only apply to authenticated users
     return !req.user;

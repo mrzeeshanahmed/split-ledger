@@ -17,6 +17,10 @@ import apiKeysRoutes from './routes/apiKeys.routes.js';
 import billingRoutes from './routes/billing.js';
 import webhookRoutes from './routes/webhooks.routes.js';
 import { analyticsRoutes } from './routes/analytics.routes.js';
+import connectRoutes from './routes/connect.routes.js';
+import subscriptionRoutes from './routes/subscriptions.routes.js';
+import usersRoutes from './routes/users.routes.js';
+import brandingRoutes from './routes/branding.routes.js';
 import { connectWithRetry as connectDb, closePool } from './db/index.js';
 import { connectRedis, closeRedis } from './db/redis.js';
 import { initializePaymentProvider } from './services/payment/paymentProvider.js';
@@ -24,8 +28,14 @@ import { startScheduler } from './jobs/scheduler.js';
 import { startWebhookWorker, stopWebhookWorker } from './workers/webhookWorker.js';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger.js';
+import adminAuthRoutes from './routes/admin/auth.routes.js';
+import adminTenantsRoutes from './routes/admin/tenants.routes.js';
+import adminSettingsRoutes from './routes/admin/settings.routes.js';
+import adminRevenueRoutes from './routes/admin/revenue.routes.js';
+import { requirePlatformAdmin } from './middleware/platformAdmin.js';
+import { setCSRFToken, validateCSRF } from './middleware/csrf.js';
 
-const createApp = (): Application => {
+export const createApp = (): Application => {
   const app = express();
 
   app.use(helmet());
@@ -51,6 +61,10 @@ const createApp = (): Application => {
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
   app.use(cookieParser());
+
+  // CSRF protection
+  app.use(setCSRFToken);
+  app.use(validateCSRF);
 
   app.use(requestIdMiddleware);
 
@@ -79,6 +93,18 @@ const createApp = (): Application => {
   // Analytics routes
   app.use('/api/analytics', analyticsRoutes);
 
+  // Stripe Connect routes
+  app.use('/api/connect', connectRoutes);
+
+  // Subscription routes
+  app.use('/api/subscriptions', subscriptionRoutes);
+
+  // User management routes
+  app.use('/api/users', usersRoutes);
+
+  // Branding routes
+  app.use('/api/branding', brandingRoutes);
+
   // API Documentation (Swagger)
   if (env.NODE_ENV !== 'production') {
     app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
@@ -88,6 +114,12 @@ const createApp = (): Application => {
       res.send(swaggerSpec);
     });
   }
+
+  // Platform Admin routes (separate auth from tenant routes)
+  app.use('/api/admin/auth', adminAuthRoutes);
+  app.use('/api/admin/tenants', requirePlatformAdmin, adminTenantsRoutes);
+  app.use('/api/admin/settings', requirePlatformAdmin, adminSettingsRoutes);
+  app.use('/api/admin/revenue', requirePlatformAdmin, adminRevenueRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
@@ -130,14 +162,17 @@ const startServer = async (): Promise<void> => {
     await connectDb();
     await connectRedis();
 
-    // Initialize payment provider
-    initializePaymentProvider(env.NODE_ENV === 'test' ? 'mock' : 'stripe');
+    // Initialize payment provider (auto-detects based on STRIPE_SECRET_KEY)
+    await initializePaymentProvider();
 
-    // Start billing scheduler
-    startScheduler();
+    // Only start persistent workers when NOT in serverless mode
+    if (!process.env.VERCEL) {
+      // Start billing scheduler
+      startScheduler();
 
-    // Start webhook delivery worker
-    startWebhookWorker();
+      // Start webhook delivery worker
+      startWebhookWorker();
+    }
 
     const app = createApp();
 
@@ -163,4 +198,4 @@ if (process.env.NODE_ENV !== 'test') {
   startServer();
 }
 
-export { createApp, startServer };
+export { startServer };

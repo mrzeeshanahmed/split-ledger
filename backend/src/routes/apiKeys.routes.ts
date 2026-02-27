@@ -118,6 +118,31 @@ router.get(
 );
 
 /**
+ * GET /api-keys/usage/summary
+ * Get aggregated usage statistics across all API keys
+ * This route must be defined before /:apiKeyId to avoid route conflicts
+ */
+router.get(
+  '/usage/summary',
+  validate(getAggregatedUsageSchema),
+  requireAuth,
+  requireRole('owner', 'admin'),
+  async (req, res, next) => {
+    try {
+      const tenantId = req.tenantId!;
+
+      const aggregatedStats = await ApiKeyService.getAggregatedUsageStats(tenantId);
+
+      res.json({
+        stats: aggregatedStats,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
  * GET /api-keys/:apiKeyId
  * Get a single API key by ID
  */
@@ -248,31 +273,6 @@ router.get(
       res.json({
         apiKeyId,
         usage: usageStats,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-/**
- * GET /api-keys/usage/summary
- * Get aggregated usage statistics across all API keys
- * Note: This route must be defined before /:apiKeyId to avoid conflicts
- */
-router.get(
-  '/usage/summary',
-  validate(getAggregatedUsageSchema),
-  requireAuth,
-  requireRole('owner', 'admin'),
-  async (req, res, next) => {
-    try {
-      const tenantId = req.tenantId!;
-
-      const aggregatedStats = await ApiKeyService.getAggregatedUsageStats(tenantId);
-
-      res.json({
-        stats: aggregatedStats,
       });
     } catch (error) {
       next(error);

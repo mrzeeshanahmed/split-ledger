@@ -18,6 +18,103 @@ import {
 
 const router = Router({ mergeParams: true });
 
+/**
+ * Default Free plan definition
+ */
+const FREE_PLAN = {
+  id: 'free',
+  name: 'Free',
+  priceCents: 0,
+  features: [
+    'Up to 5 active users',
+    '1,000 API calls/month',
+    '100 MB storage',
+    'Basic expense tracking',
+    'Group management',
+    'Email support',
+  ],
+  limits: {
+    apiCallsPerMonth: 1000,
+    storageBytes: 100 * 1024 * 1024, // 100 MB
+    activeUsers: 5,
+  },
+};
+
+/**
+ * GET /billing/info
+ * Get billing overview for the current tenant
+ */
+router.get(
+  '/info',
+  requireTenant,
+  requireAuth,
+  async (req, res, next) => {
+    try {
+      const tenantId = req.tenantId!;
+      const tenantSchema = req.tenantSchema!;
+
+      // Get current usage from UsageMeterService
+      const now = new Date();
+      const periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+      let apiCallsUsed = 0;
+      let storageUsed = 0;
+      let activeUsersCount = 0;
+
+      try {
+        const usageSummary = await UsageMeterService.getUsageForPeriod(
+          tenantSchema,
+          { startDate: periodStart, endDate: periodEnd }
+        );
+        apiCallsUsed = usageSummary.find((u) => u.metric === 'api_calls')?.totalQuantity || 0;
+        storageUsed = usageSummary.find((u) => u.metric === 'storage_bytes')?.totalQuantity || 0;
+        activeUsersCount = usageSummary.find((u) => u.metric === 'active_users')?.totalQuantity || 0;
+      } catch {
+        // Usage data may not exist yet for new tenants
+      }
+
+      const plan = FREE_PLAN;
+
+      const billing = {
+        currentPlan: plan,
+        usage: {
+          apiCalls: {
+            used: apiCallsUsed,
+            limit: plan.limits.apiCallsPerMonth,
+            percentage: plan.limits.apiCallsPerMonth > 0
+              ? Math.min(100, Math.round((apiCallsUsed / plan.limits.apiCallsPerMonth) * 100))
+              : 0,
+          },
+          storageBytes: {
+            used: storageUsed,
+            limit: plan.limits.storageBytes,
+            percentage: plan.limits.storageBytes > 0
+              ? Math.min(100, Math.round((storageUsed / plan.limits.storageBytes) * 100))
+              : 0,
+          },
+          activeUsers: {
+            used: activeUsersCount,
+            limit: plan.limits.activeUsers,
+            percentage: plan.limits.activeUsers > 0
+              ? Math.min(100, Math.round((activeUsersCount / plan.limits.activeUsers) * 100))
+              : 0,
+          },
+        },
+        subscriptionStatus: 'active' as const,
+        currentPeriodStart: periodStart.toISOString(),
+        currentPeriodEnd: periodEnd.toISOString(),
+        nextRenewalDate: new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString(),
+        cancelAtPeriodEnd: false,
+      };
+
+      res.json({ billing });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.post(
   '/usage',
   requireTenant,
@@ -133,7 +230,7 @@ router.get(
       const tenantSchema = req.tenantSchema!;
 
       const usageAggregations = await UsageMeterService.getUsageForPeriod(tenantSchema, { startDate, endDate });
-      const subscriptionPlan = (req as any).user?.subscriptionPlan || 'free';
+      const subscriptionPlan = 'free'; // TODO: Fetch from DB in Phase 8 (subscriptions)
 
       const preview = BillingCalculatorService.previewBilling(subscriptionPlan, usageAggregations as any);
 

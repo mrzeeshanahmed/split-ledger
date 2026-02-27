@@ -14,38 +14,38 @@
 
 /**
  * Primary color scale - Used for main actions, active states, and emphasis
- * Based on Indigo palette
+ * Based on Electric Violet palette
  */
 export const primary = {
-  50: '#eef2ff',
-  100: '#e0e7ff',
-  200: '#c7d2fe',
-  300: '#a5b4fc',
-  400: '#818cf8',
-  500: '#6366f1',
-  600: '#4f46e5',
-  700: '#4338ca',
-  800: '#3730a3',
-  900: '#312e81',
-  950: '#1e1b4b',
+  50: '#f5f3ff', // violet-50
+  100: '#ede9fe', // violet-100
+  200: '#ddd6fe', // violet-200
+  300: '#c4b5fd', // violet-300
+  400: '#a78bfa', // violet-400
+  500: '#8b5cf6', // violet-500
+  600: '#7c3aed', // violet-600
+  700: '#6d28d9', // violet-700
+  800: '#5b21b6', // violet-800
+  900: '#4c1d95', // violet-900
+  950: '#2e1065', // violet-950
 };
 
 /**
  * Secondary color scale - Used for secondary actions and supporting elements
- * Based on Slate palette
+ * Based on Zinc palette
  */
 export const secondary = {
-  50: '#f8fafc',
-  100: '#f1f5f9',
-  200: '#e2e8f0',
-  300: '#cbd5e1',
-  400: '#94a3b8',
-  500: '#64748b',
-  600: '#475569',
-  700: '#334155',
-  800: '#1e293b',
-  900: '#0f172a',
-  950: '#020617',
+  50: '#fafafa', // zinc-50
+  100: '#f4f4f5', // zinc-100
+  200: '#e4e4e7', // zinc-200
+  300: '#d4d4d8', // zinc-300
+  400: '#a1a1aa', // zinc-400
+  500: '#71717a', // zinc-500
+  600: '#52525b', // zinc-600
+  700: '#3f3f46', // zinc-700
+  800: '#27272a', // zinc-800
+  900: '#18181b', // zinc-900
+  950: '#09090b', // zinc-950
 };
 
 /**
@@ -124,31 +124,31 @@ export const info = {
  * Background colors - Used for page and container backgrounds
  */
 export const background = {
-  default: '#ffffff',
-  subtle: '#f8fafc',
-  muted: '#f1f5f9',
-  dark: '#0f172a',
+  default: '#09090b', // zinc-950
+  subtle: '#18181b',  // zinc-900
+  muted: '#27272a',   // zinc-800
+  dark: '#000000',    // black
 };
 
 /**
  * Border colors - Used for borders and dividers
  */
 export const border = {
-  default: '#e2e8f0',
-  subtle: '#f1f5f9',
-  strong: '#cbd5e1',
+  default: '#27272a', // zinc-800
+  subtle: '#18181b',  // zinc-900
+  strong: '#3f3f46',  // zinc-700
 };
 
 /**
  * Text colors - Used for typography
  */
 export const text = {
-  primary: '#0f172a',
-  secondary: '#475569',
-  muted: '#94a3b8',
-  inverse: '#ffffff',
-  link: '#4f46e5',
-  linkHover: '#4338ca',
+  primary: '#f4f4f5', // zinc-100
+  secondary: '#a1a1aa', // zinc-400
+  muted: '#71717a', // zinc-500
+  inverse: '#09090b', // zinc-950
+  link: '#a78bfa', // violet-400
+  linkHover: '#c4b5fd', // violet-300
 };
 
 /**
@@ -161,6 +161,30 @@ export const chart = {
   4: '#ef4444',
   5: '#0ea5e9',
   6: '#8b5cf6',
+};
+
+/**
+ * Brand specific accents
+ */
+export const brand = {
+  fuchsia: {
+    400: '#e879f9',
+    500: '#d946ef',
+    600: '#c026d3',
+  },
+  violet: {
+    400: '#a78bfa',
+    500: '#8b5cf6',
+    600: '#7c3aed',
+  },
+  pink: {
+    400: '#f472b6',
+    500: '#ec4899',
+    600: '#db2777',
+  },
+  blue: {
+    500: '#3b82f6',
+  }
 };
 
 /**
@@ -177,6 +201,7 @@ export const colors = {
   border,
   text,
   chart,
+  brand,
   white: '#ffffff',
   black: '#000000',
   transparent: 'transparent',

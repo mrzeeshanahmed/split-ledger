@@ -36,18 +36,18 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
  */
 const variantStyles: Record<ButtonVariant, string> = {
   primary: [
-    'bg-primary-600 text-white',
-    'hover:bg-primary-700',
-    'active:bg-primary-800',
+    'bg-gradient-to-r from-brand-violet-600 to-brand-fuchsia-600 text-white shadow-lg shadow-brand-violet-500/25',
+    'hover:from-brand-violet-500 hover:to-brand-fuchsia-500 hover:scale-[1.02]',
+    'active:scale-[0.98]',
     'focus-visible:ring-primary-500',
-    'disabled:hover:bg-primary-600',
+    'disabled:hover:from-brand-violet-600 disabled:hover:to-brand-fuchsia-600 disabled:hover:scale-100',
   ].join(' '),
   secondary: [
-    'bg-white text-text-primary border border-border-default',
-    'hover:bg-secondary-50 hover:border-border-strong',
-    'active:bg-secondary-100',
+    'bg-white/5 text-white border border-white/10',
+    'hover:bg-white/10 hover:border-white/20 text-white',
+    'active:bg-white/5',
     'focus-visible:ring-primary-500',
-    'disabled:hover:bg-white disabled:hover:border-border-default',
+    'disabled:hover:bg-white/5 disabled:hover:border-white/10',
   ].join(' '),
   danger: [
     'bg-danger-600 text-white',
@@ -58,8 +58,8 @@ const variantStyles: Record<ButtonVariant, string> = {
   ].join(' '),
   ghost: [
     'bg-transparent text-text-secondary',
-    'hover:bg-secondary-100 hover:text-text-primary',
-    'active:bg-secondary-200',
+    'hover:bg-white/5 hover:text-white',
+    'active:bg-white/10',
     'focus-visible:ring-primary-500',
     'disabled:hover:bg-transparent disabled:hover:text-text-secondary',
   ].join(' '),

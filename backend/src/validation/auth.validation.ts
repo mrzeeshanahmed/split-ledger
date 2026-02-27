@@ -31,6 +31,41 @@ export const registerSchema = z.object({
 });
 
 /**
+ * Register Tenant validation schema
+ */
+export const registerTenantSchema = z.object({
+  body: z.object({
+    workspaceName: z
+      .string()
+      .min(1, 'Workspace name is required')
+      .max(50, 'Workspace name must be less than 50 characters')
+      .trim(),
+    email: z
+      .string()
+      .min(1, 'Email is required')
+      .email('Invalid email address format')
+      .toLowerCase()
+      .trim(),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters long')
+      .max(128, 'Password must be less than 128 characters'),
+    firstName: z
+      .string()
+      .min(1, 'First name is required')
+      .max(100, 'First name must be less than 100 characters')
+      .trim(),
+    lastName: z
+      .string()
+      .min(1, 'Last name is required')
+      .max(100, 'Last name must be less than 100 characters')
+      .trim(),
+  }),
+  query: z.object({}).optional(),
+  params: z.object({}).optional(),
+});
+
+/**
  * Login validation schema
  */
 export const loginSchema = z.object({

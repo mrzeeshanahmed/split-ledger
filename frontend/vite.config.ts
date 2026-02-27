@@ -14,7 +14,15 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:4000',
-        changeOrigin: true,
+        changeOrigin: false,
+        // Manually forward the original Host to the backend for tenant resolution
+        configure: (proxy, _options) => {
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            if (req.headers.host) {
+              proxyReq.setHeader('Host', req.headers.host);
+            }
+          });
+        },
       },
     },
   },

@@ -81,8 +81,8 @@ export function NavItem({
         'flex items-center gap-3 w-full rounded-lg transition-all duration-normal',
         'text-sm font-medium',
         active
-          ? 'bg-primary-50 text-primary-700'
-          : 'text-text-secondary hover:bg-secondary-100 hover:text-text-primary',
+          ? 'bg-brand-violet-500/10 text-brand-violet-400'
+          : 'text-secondary-400 hover:bg-white/5 hover:text-white',
         collapsed ? 'justify-center px-3 py-2' : 'px-3 py-2',
       )}
       aria-current={active ? 'page' : undefined}
@@ -118,7 +118,7 @@ export function SidebarNav({
   return (
     <nav
       className={cn(
-        'flex flex-col h-full bg-white border-r border-border-default',
+        'flex flex-col h-full bg-zinc-950/50 backdrop-blur-xl border-r border-white/5',
         collapsed ? 'w-16' : 'w-64',
         'transition-all duration-300',
         className,
@@ -145,7 +145,7 @@ export function SidebarNav({
             onClick={() => onCollapsedChange(!collapsed)}
             className={cn(
               'flex items-center gap-3 w-full rounded-lg text-sm font-medium',
-              'text-text-secondary hover:bg-secondary-100 hover:text-text-primary',
+              'text-secondary-400 hover:bg-white/5 hover:text-white',
               'transition-all duration-normal',
               collapsed ? 'justify-center px-3 py-2' : 'px-3 py-2',
             )}
@@ -179,7 +179,7 @@ export function TopBar({ left, center, right, className, ...props }: TopBarProps
   return (
     <header
       className={cn(
-        'flex items-center h-16 bg-white border-b border-border-default px-4',
+        'flex items-center h-16 bg-zinc-950/50 backdrop-blur-xl border-b border-white/5 px-4',
         className,
       )}
       {...props}
@@ -203,7 +203,7 @@ export function AppShell({
   ...props
 }: AppShellProps) {
   return (
-    <div className={cn('flex h-screen bg-background-subtle', className)} {...props}>
+    <div className={cn('flex h-screen bg-zinc-950 text-zinc-300', className)} {...props}>
       {sidebar}
       <div className="flex-1 flex flex-col overflow-hidden">
         {topBar}
@@ -249,7 +249,7 @@ export function Breadcrumb({
             {item.href ? (
               <a
                 href={item.href}
-                className="text-text-secondary hover:text-text-primary transition-colors"
+                className="text-secondary-400 hover:text-white transition-colors"
               >
                 {item.label}
               </a>
@@ -257,12 +257,12 @@ export function Breadcrumb({
               <button
                 type="button"
                 onClick={item.onClick}
-                className="text-text-secondary hover:text-text-primary transition-colors"
+                className="text-secondary-400 hover:text-white transition-colors"
               >
                 {item.label}
               </button>
             ) : (
-              <span className="text-text-primary font-medium">{item.label}</span>
+              <span className="text-white font-medium">{item.label}</span>
             )}
           </li>
         ))}

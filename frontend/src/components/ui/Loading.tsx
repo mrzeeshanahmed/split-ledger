@@ -263,7 +263,7 @@ const spinnerSizeStyles = {
 };
 
 const spinnerColorStyles = {
-  primary: 'text-primary-600',
+  primary: 'text-violet-500',
   white: 'text-white',
   current: 'text-current',
 };

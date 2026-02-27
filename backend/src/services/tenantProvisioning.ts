@@ -36,6 +36,11 @@ export class TenantProvisioningService {
       // Create schema name (UUID without dashes)
       const schemaName = `tenant_${tenantId.replace(/-/g, '')}`;
 
+      // Validate schema name to prevent SQL injection
+      if (!/^tenant_[a-zA-Z0-9]+$/.test(schemaName)) {
+        throw new Error('Invalid schema name generated');
+      }
+
       // Create schema for tenant
       await client.query(`CREATE SCHEMA IF NOT EXISTS ${schemaName}`);
 
@@ -46,7 +51,7 @@ export class TenantProvisioningService {
         WHERE table_schema = 'tenant_template'
       `);
 
-      console.log('Tables cloned from tenant_template:', tables);
+      logger.debug({ message: 'Tables cloned from tenant_template', tables: tables.map((t: any) => t.table_name) });
 
       // Clone every table in tenant_template
       for (const { table_name } of tables) {

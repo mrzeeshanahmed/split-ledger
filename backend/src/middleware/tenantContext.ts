@@ -1,6 +1,7 @@
 import 'express';
 import type { Request, RequestHandler } from 'express';
 import { TenantProvisioningService } from '../services/tenantProvisioning.js';
+import { getTenantSchema } from '../db/tenantClient.js';
 import { Tenant } from '../types/tenant.js';
 import { AppError } from '../errors/index.js';
 
@@ -20,19 +21,19 @@ export interface TenantContextOptions {
    * @default true
    */
   extractFromSubdomain?: boolean;
-  
+
   /**
    * Whether to extract tenant from X-Tenant-ID header
    * @default true
    */
   extractFromHeader?: boolean;
-  
+
   /**
    * Whether to extract tenant from X-Tenant-Subdomain header
    * @default false
    */
   extractFromSubdomainHeader?: boolean;
-  
+
   /**
    * Whether to require tenant context (throw error if not found)
    * @default false
@@ -67,16 +68,18 @@ function extractTenantIdentifier(req: Request, options: TenantContextOptions): s
       const hostValue = Array.isArray(host) ? host[0] : host;
       // Remove port if present
       const hostname = hostValue.split(':')[0];
-      
-      // Check for subdomain pattern (e.g., acme.example.com)
       const parts = hostname.split('.');
+
+      // Handle *.localhost (e.g., demo.localhost → subdomain = "demo")
+      if (parts.length === 2 && parts[1] === 'localhost') {
+        return parts[0];
+      }
+
+      // Check for subdomain pattern (e.g., acme.example.com)
       if (parts.length >= 3) {
-        // First part is likely the subdomain (e.g., "acme" from "acme.example.com")
-        // Skip localhost and common patterns
         const subdomain = parts[0];
-        
-        // Skip if it's localhost or an IP address
-        if (subdomain !== 'localhost' && !/^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+        // Skip if it's an IP address
+        if (!/^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
           return subdomain;
         }
       }
@@ -147,7 +150,7 @@ export const tenantContextMiddleware = (options: TenantContextOptions = {}): Req
 
       // Set tenant context on request
       req.tenantId = tenantId || undefined;
-      req.tenantSchema = `tenant_${tenantId?.replace(/-/g, '')}`;
+      req.tenantSchema = getTenantSchema(tenantId!);
       req.tenant = tenant;
 
       next();

@@ -68,4 +68,30 @@ export interface IPaymentProvider {
   getBalance(): Promise<BalanceResult>;
   retrieveCharge(chargeId: string): Promise<ChargeResult>;
   refundCharge(chargeId: string, amountCents?: number): Promise<{ success: boolean; refundId?: string; error?: ChargeError }>;
+
+  // Stripe Connect methods
+  createConnectAccount(tenantId: string, email: string): Promise<ConnectAccountResult>;
+  createAccountLink(stripeAccountId: string, returnUrl: string, refreshUrl: string): Promise<ConnectAccountLinkResult>;
+  getConnectAccountStatus(stripeAccountId: string): Promise<ConnectAccountStatusResult>;
+  createConnectLoginLink(stripeAccountId: string): Promise<{ url: string }>;
+}
+
+export interface ConnectAccountResult {
+  success: boolean;
+  accountId?: string;
+  error?: string;
+}
+
+export interface ConnectAccountLinkResult {
+  success: boolean;
+  url?: string;
+  error?: string;
+}
+
+export interface ConnectAccountStatusResult {
+  accountId: string;
+  chargesEnabled: boolean;
+  payoutsEnabled: boolean;
+  detailsSubmitted: boolean;
+  requirements?: string[];
 }

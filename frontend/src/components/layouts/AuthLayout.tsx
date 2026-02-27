@@ -23,10 +23,14 @@ export interface AuthLayoutProps {
  */
 export function AuthLayout({ children, className, title, subtitle }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background-subtle p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-950 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+      {/* Background orbs */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-600/20 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-fuchsia-600/20 blur-[120px] rounded-full pointer-events-none" />
+
       {/* Logo */}
-      <div className="mb-8">
-        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-600 text-white">
+      <div className="mb-8 relative z-10">
+        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25">
           <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path
               strokeLinecap="round"
@@ -40,14 +44,16 @@ export function AuthLayout({ children, className, title, subtitle }: AuthLayoutP
       {/* Card */}
       <div
         className={cn(
-          'w-full max-w-md bg-white border border-border-default rounded-xl shadow-lg p-6 sm:p-8',
+          'w-full max-w-md relative z-10 bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-6 sm:p-8 overflow-hidden',
           className,
         )}
       >
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-text-primary">{title}</h1>
-          {subtitle && <p className="text-text-secondary mt-1">{subtitle}</p>}
+          <h1 className="text-2xl font-bold text-white">{title}</h1>
+          {subtitle && <p className="text-zinc-400 mt-1">{subtitle}</p>}
         </div>
 
         {/* Content */}
@@ -55,8 +61,8 @@ export function AuthLayout({ children, className, title, subtitle }: AuthLayoutP
       </div>
 
       {/* Footer */}
-      <div className="mt-8 text-center">
-        <p className="text-sm text-text-muted">
+      <div className="mt-8 text-center relative z-10">
+        <p className="text-sm text-zinc-500">
           &copy; {new Date().getFullYear()} Split-Ledger. All rights reserved.
         </p>
       </div>

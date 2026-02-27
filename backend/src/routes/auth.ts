@@ -20,11 +20,13 @@ import {
 import logger from '../utils/logger.js';
 import {
   registerSchema,
+  registerTenantSchema,
   loginSchema,
   refreshTokenSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
 } from '../validation/auth.validation.js';
+import { TenantProvisioningService } from '../services/tenantProvisioning.js';
 
 const router = Router({ mergeParams: true });
 
@@ -94,6 +96,100 @@ router.post(
           role: user.role,
           emailVerified: user.email_verified,
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * POST /auth/register-tenant
+ * Register a new workspace/tenant and its owner
+ */
+router.post(
+  '/register-tenant',
+  authRateLimiter,
+  validate(registerTenantSchema),
+  async (req, res, next) => {
+    try {
+      const { workspaceName, email, password, firstName, lastName } = req.body;
+
+      // Generate a safe base subdomain
+      let baseSubdomain = workspaceName
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+
+      if (!baseSubdomain || baseSubdomain.length < 3) {
+        baseSubdomain = `tenant-${Math.random().toString(36).substring(2, 6)}`;
+      }
+
+      // Ensure it's not too long
+      baseSubdomain = baseSubdomain.substring(0, 50);
+
+      let subdomain = baseSubdomain;
+      let counter = 1;
+
+      // Find an available subdomain
+      while (true) {
+        try {
+          await TenantProvisioningService.validateSubdomain(subdomain);
+          break; // It's valid and available
+        } catch (err: any) {
+          if (err.code === 'DUPLICATE_SUBDOMAIN' || err.code === 'RESERVED_SUBDOMAIN' || err.errorCode === 'DUPLICATE_SUBDOMAIN' || err.errorCode === 'RESERVED_SUBDOMAIN') {
+            subdomain = `${baseSubdomain}-${counter}`;
+            counter++;
+          } else {
+            throw err; // Some other validation error
+          }
+        }
+      }
+
+      // Provision the tenant and owner
+      const result = await TenantProvisioningService.provisionTenant({
+        name: workspaceName,
+        subdomain,
+        owner_email: email.toLowerCase(),
+        owner_password: password,
+        owner_first_name: firstName,
+        owner_last_name: lastName,
+      });
+
+      // Generate tokens for the new owner
+      const { accessToken, refreshToken } = AuthService.generateTokens({
+        userId: result.owner.id,
+        tenantId: result.tenant.id,
+        email: result.owner.email,
+        role: result.owner.role,
+      });
+
+      // Set cookies
+      setAuthCookies(res, accessToken, refreshToken);
+
+      logger.info({
+        message: 'Tenant and owner registered successfully',
+        tenantId: result.tenant.id,
+        userId: result.owner.id,
+        email: result.owner.email,
+      });
+
+      res.status(201).json({
+        success: true,
+        user: {
+          id: result.owner.id,
+          email: result.owner.email,
+          firstName: result.owner.first_name,
+          lastName: result.owner.last_name,
+          role: result.owner.role,
+          emailVerified: result.owner.email_verified,
+        },
+        tenant: {
+          id: result.tenant.id,
+          name: result.tenant.name,
+          subdomain: result.tenant.subdomain,
+        }
       });
     } catch (error) {
       next(error);
@@ -391,8 +487,18 @@ router.post(
         });
       }
 
-      // TODO: Send email in production
-      // await sendPasswordResetEmail(email, resetToken);
+      // Send password reset email
+      try {
+        const { EmailService } = await import('../services/email.js');
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        await EmailService.sendPasswordResetEmail(email, resetToken, frontendUrl);
+      } catch (emailErr) {
+        // Don't fail the request if email sending fails — still log the token in dev
+        logger.warn({
+          message: 'Failed to send password reset email (SMTP may not be configured)',
+          error: emailErr instanceof Error ? emailErr.message : 'Unknown error',
+        });
+      }
 
       logger.info({
         message: 'Password reset email sent',

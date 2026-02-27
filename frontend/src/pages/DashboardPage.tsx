@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import {
   AppShell,
   TopBar,
@@ -27,6 +29,18 @@ export function DashboardPage() {
   const user = useAuthStore((state) => state.user);
   const logoutStore = useAuthStore((state) => state.logout);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const dashboardRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (!dashboardRef.current) return;
+
+    // Staggered fade up for stats, cards, and activity lines
+    gsap.fromTo(
+      gsap.utils.toArray('.dashboard-animate-item'),
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.05, ease: 'back.out(1.2)', delay: 0.1 }
+    );
+  }, { scope: dashboardRef });
 
   const handleLogout = async () => {
     try {
@@ -68,10 +82,10 @@ export function DashboardPage() {
 
   const topBar = (
     <TopBar
-      left={<span className="text-lg font-semibold text-text-primary">Split-Ledger</span>}
+      left={<img src="/src/assets/logo.png" alt="Split-Ledger Logo" className="h-8 object-contain" />}
       right={
         <div className="flex items-center gap-4">
-          <span className="text-sm text-text-secondary">
+          <span className="text-sm text-secondary-400">
             {user?.firstName} {user?.lastName}
           </span>
           <GhostButton size="sm" onClick={handleLogout}>
@@ -84,85 +98,97 @@ export function DashboardPage() {
 
   return (
     <AppShell sidebar={sidebar} topBar={topBar}>
-      {/* Welcome Section */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary">
-          Welcome back, {user?.firstName || 'User'}!
-        </h1>
-        <p className="text-text-secondary mt-1">
-          Here&apos;s an overview of your expense activity
-        </p>
-      </div>
+      <div ref={dashboardRef}>
+        {/* Welcome Section */}
+        <div className="mb-8 dashboard-animate-item">
+          <h1 className="text-2xl font-bold text-white">
+            Welcome back, {user?.firstName || 'User'}!
+          </h1>
+          <p className="text-secondary-400 mt-1">
+            Here&apos;s an overview of your expense activity
+          </p>
+        </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard
-          label="Total Balance"
-          value="$1,240.00"
-          change={{ value: 12.5, type: 'increase' }}
-          icon={<BalanceIcon />}
-        />
-        <StatCard
-          label="You Owe"
-          value="$320.00"
-          change={{ value: 5.2, type: 'decrease' }}
-          icon={<OweIcon />}
-        />
-        <StatCard
-          label="Owed to You"
-          value="$1,560.00"
-          change={{ value: 18.3, type: 'increase' }}
-          icon={<OwedIcon />}
-        />
-        <StatCard label="Active Groups" value="5" icon={<GroupsIcon />} />
-      </div>
-
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Your latest expenses and settlements</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {/* Placeholder activities */}
-            <ActivityItem
-              title="Dinner at Italian Place"
-              group="Roommates"
-              amount={45.0}
-              type="expense"
-              date="Today"
-            />
-            <ActivityItem
-              title="Grocery Run"
-              group="Family"
-              amount={128.5}
-              type="expense"
-              date="Yesterday"
-            />
-            <ActivityItem
-              title="Settlement from John"
-              group="Direct"
-              amount={50.0}
-              type="settlement"
-              date="2 days ago"
-            />
-            <ActivityItem
-              title="Movie Night"
-              group="Friends"
-              amount={32.0}
-              type="expense"
-              date="3 days ago"
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="dashboard-animate-item">
+            <StatCard
+              label="Total Balance"
+              value="$1,240.00"
+              change={{ value: 12.5, type: 'increase' }}
+              icon={<BalanceIcon />}
             />
           </div>
-        </CardContent>
-      </Card>
+          <div className="dashboard-animate-item">
+            <StatCard
+              label="You Owe"
+              value="$320.00"
+              change={{ value: 5.2, type: 'decrease' }}
+              icon={<OweIcon />}
+            />
+          </div>
+          <div className="dashboard-animate-item">
+            <StatCard
+              label="Owed to You"
+              value="$1,560.00"
+              change={{ value: 18.3, type: 'increase' }}
+              icon={<OwedIcon />}
+            />
+          </div>
+          <div className="dashboard-animate-item">
+            <StatCard label="Active Groups" value="5" icon={<GroupsIcon />} />
+          </div>
+        </div>
 
-      {/* Quick Actions */}
-      <div className="mt-8 flex flex-wrap gap-3">
-        <PrimaryButton leftIcon={<PlusIcon />}>Add Expense</PrimaryButton>
-        <GhostButton leftIcon={<UserPlusIcon />}>Create Group</GhostButton>
-        <GhostButton leftIcon={<DollarSignIcon />}>Record Payment</GhostButton>
+        {/* Recent Activity */}
+        <div className="dashboard-animate-item">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>Your latest expenses and settlements</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Placeholder activities */}
+                <ActivityItem
+                  title="Dinner at Italian Place"
+                  group="Roommates"
+                  amount={45.0}
+                  type="expense"
+                  date="Today"
+                />
+                <ActivityItem
+                  title="Grocery Run"
+                  group="Family"
+                  amount={128.5}
+                  type="expense"
+                  date="Yesterday"
+                />
+                <ActivityItem
+                  title="Settlement from John"
+                  group="Direct"
+                  amount={50.0}
+                  type="settlement"
+                  date="2 days ago"
+                />
+                <ActivityItem
+                  title="Movie Night"
+                  group="Friends"
+                  amount={32.0}
+                  type="expense"
+                  date="3 days ago"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mt-8 flex flex-wrap gap-3 dashboard-animate-item">
+          <PrimaryButton leftIcon={<PlusIcon />}>Add Expense</PrimaryButton>
+          <GhostButton leftIcon={<UserPlusIcon />}>Create Group</GhostButton>
+          <GhostButton leftIcon={<DollarSignIcon />}>Record Payment</GhostButton>
+        </div>
       </div>
     </AppShell>
   );
@@ -185,24 +211,24 @@ function ActivityItem({
   date: string;
 }) {
   return (
-    <div className="flex items-center justify-between py-3 border-b border-border-default last:border-0">
+    <div className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
       <div className="flex items-center gap-3">
         <div
-          className={`w-10 h-10 rounded-lg flex items-center justify-center ${type === 'expense' ? 'bg-danger-50 text-danger-600' : 'bg-accent-50 text-accent-600'
+          className={`w-10 h-10 rounded-lg flex items-center justify-center ${type === 'expense' ? 'bg-danger-500/10 text-danger-400 border border-danger-500/20' : 'bg-success-500/10 text-success-400 border border-success-500/20'
             }`}
         >
           {type === 'expense' ? <ExpensesIcon /> : <SettlementsIcon />}
         </div>
         <div>
-          <p className="font-medium text-text-primary">{title}</p>
-          <p className="text-sm text-text-secondary">{group}</p>
+          <p className="font-medium text-white">{title}</p>
+          <p className="text-sm text-secondary-400">{group}</p>
         </div>
       </div>
       <div className="text-right">
-        <p className={`font-medium ${type === 'expense' ? 'text-danger-600' : 'text-accent-600'}`}>
+        <p className={`font-medium ${type === 'expense' ? 'text-danger-400' : 'text-success-400'}`}>
           {type === 'expense' ? '-' : '+'}${amount.toFixed(2)}
         </p>
-        <p className="text-sm text-text-muted">{date}</p>
+        <p className="text-sm text-secondary-500">{date}</p>
       </div>
     </div>
   );

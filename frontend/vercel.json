@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/:path*",
+            "destination": "https://split-ledger-api.vercel.app/api/:path*"
+        },
+        {
+            "source": "/((?!assets|favicon).*)",
+            "destination": "/index.html"
+        }
+    ]
+}

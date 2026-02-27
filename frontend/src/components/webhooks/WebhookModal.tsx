@@ -136,11 +136,11 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, web
                                                 type="checkbox"
                                                 checked={selectedEvents.includes(eventName)}
                                                 onChange={() => handleToggleEvent(eventName)}
-                                                className="w-4 h-4 text-primary-600 border-border-default rounded focus:ring-primary-500"
+                                                className="w-4 h-4 text-violet-500 border-border-default rounded focus:ring-primary-500"
                                             />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-sm text-text-primary font-mono select-none group-hover:text-primary-700 transition-colors">
+                                            <span className="text-sm text-text-primary font-mono select-none group-hover:text-violet-400 transition-colors">
                                                 {eventName}
                                             </span>
                                         </div>

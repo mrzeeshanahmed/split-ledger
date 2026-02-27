@@ -121,7 +121,7 @@ export function DataTable<T extends Record<string, unknown>>({
   // Handle sort
   const handleSort = (columnKey: string) => {
     if (!sortable) return;
-    
+
     const column = columns.find((col) => col.key === columnKey);
     if (!column?.sortable) return;
 
@@ -164,15 +164,15 @@ export function DataTable<T extends Record<string, unknown>>({
   // Render skeleton rows
   if (loading) {
     return (
-      <div className={cn('bg-white border border-border-default rounded-lg overflow-hidden', className)} {...props}>
-        <table className="min-w-full divide-y divide-border-default">
-          <thead className="bg-secondary-50">
+      <div className={cn('relative bg-secondary-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden', className)} {...props}>
+        <table className="min-w-full divide-y divide-white/5">
+          <thead className="bg-secondary-900 border-b border-white/10">
             <tr>
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
                   className={cn(
-                    'px-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider',
+                    'px-4 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider',
                     compact ? 'py-2' : 'py-3',
                   )}
                   style={{ width: column.width }}
@@ -182,7 +182,7 @@ export function DataTable<T extends Record<string, unknown>>({
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-border-default">
+          <tbody className="divide-y divide-white/5">
             {[...Array(5)].map((_, index) => (
               <tr key={index}>
                 {columns.map((column) => (
@@ -201,20 +201,20 @@ export function DataTable<T extends Record<string, unknown>>({
   // Render empty state
   if (data.length === 0) {
     return (
-      <div className={cn('bg-white border border-border-default rounded-lg', className)} {...props}>
+      <div className={cn('relative bg-secondary-900/40 backdrop-blur-xl border border-white/10 rounded-2xl', className)} {...props}>
         <div className="flex flex-col items-center justify-center py-12 px-4">
-          {emptyIcon && <div className="text-text-muted mb-4">{emptyIcon}</div>}
-          <p className="text-sm text-text-secondary">{emptyMessage}</p>
+          {emptyIcon && <div className="text-secondary-500 mb-4">{emptyIcon}</div>}
+          <p className="text-sm text-secondary-400">{emptyMessage}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={cn('bg-white border border-border-default rounded-lg overflow-hidden', className)} {...props}>
+    <div className={cn('relative bg-secondary-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden', className)} {...props}>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-border-default">
-          <thead className={cn('bg-secondary-50', stickyHeader && 'sticky top-0')}>
+        <table className="min-w-full divide-y divide-white/5">
+          <thead className={cn('bg-secondary-900 border-b border-white/10', stickyHeader && 'sticky top-0')}>
             <tr>
               {columns.map((column) => {
                 const isSortable = sortable && column.sortable;
@@ -224,10 +224,10 @@ export function DataTable<T extends Record<string, unknown>>({
                   <th
                     key={String(column.key)}
                     className={cn(
-                      'px-4 text-xs font-medium text-text-secondary uppercase tracking-wider',
+                      'px-4 text-xs font-medium text-secondary-500 uppercase tracking-wider',
                       compact ? 'py-2' : 'py-3',
                       column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : 'text-left',
-                      isSortable && 'cursor-pointer select-none hover:bg-secondary-100 transition-colors',
+                      isSortable && 'cursor-pointer select-none hover:bg-white/[0.02] transition-colors',
                     )}
                     style={{ width: column.width }}
                     onClick={() => handleSort(String(column.key))}
@@ -242,14 +242,14 @@ export function DataTable<T extends Record<string, unknown>>({
               })}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-border-default">
+          <tbody className="divide-y divide-white/5">
             {sortedData.map((row, rowIndex) => (
               <tr
                 key={getRowKey(row, rowIndex)}
                 className={cn(
-                  'transition-colors',
-                  striped && rowIndex % 2 === 1 && 'bg-secondary-50',
-                  onRowClick && 'cursor-pointer hover:bg-secondary-50',
+                  'transition-colors hover:bg-white/[0.02]',
+                  striped && rowIndex % 2 === 1 && 'bg-white/[0.02]',
+                  onRowClick && 'cursor-pointer',
                 )}
                 onClick={() => onRowClick?.(row, rowIndex)}
               >
@@ -262,7 +262,7 @@ export function DataTable<T extends Record<string, unknown>>({
                     <td
                       key={String(column.key)}
                       className={cn(
-                        'px-4 text-sm text-text-primary',
+                        'px-4 text-sm text-white',
                         compact ? 'py-2' : 'py-3',
                         column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : 'text-left',
                       )}
@@ -279,22 +279,22 @@ export function DataTable<T extends Record<string, unknown>>({
 
       {/* Pagination */}
       {pagination && (
-        <div className="px-4 py-3 bg-secondary-50 border-t border-border-default flex items-center justify-between">
-          <p className="text-sm text-text-secondary">
+        <div className="px-4 py-3 border-t border-white/5 flex items-center justify-between bg-black/20">
+          <p className="text-sm text-secondary-400">
             Showing {((pagination.currentPage - 1) * pagination.pageSize) + 1} to{' '}
             {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalItems)} of{' '}
             {pagination.totalItems} results
           </p>
           <div className="flex items-center gap-2">
             <button
-              className="px-3 py-1.5 text-sm font-medium text-text-secondary bg-white border border-border-default rounded-md hover:bg-secondary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1.5 text-sm font-medium text-white bg-white/5 border border-white/10 rounded-md hover:bg-white/10 hover:border-white/20 disabled:hover:bg-white/5 disabled:hover:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
               disabled={pagination.currentPage === 1}
               onClick={() => pagination.onPageChange(pagination.currentPage - 1)}
             >
               Previous
             </button>
             <button
-              className="px-3 py-1.5 text-sm font-medium text-text-secondary bg-white border border-border-default rounded-md hover:bg-secondary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1.5 text-sm font-medium text-white bg-white/5 border border-white/10 rounded-md hover:bg-white/10 hover:border-white/20 disabled:hover:bg-white/5 disabled:hover:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
               disabled={pagination.currentPage * pagination.pageSize >= pagination.totalItems}
               onClick={() => pagination.onPageChange(pagination.currentPage + 1)}
             >

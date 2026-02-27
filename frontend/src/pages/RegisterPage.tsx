@@ -13,7 +13,7 @@ import {
   useToast,
 } from '@/components';
 import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator';
-import { register } from '@/api/auth';
+import { registerTenant } from '@/api/auth';
 import { useAuthStore } from '@/stores/authStore';
 import { getErrorMessage } from '@/lib/axios';
 
@@ -22,6 +22,7 @@ import { getErrorMessage } from '@/lib/axios';
  */
 const registerSchema = z
   .object({
+    workspaceName: z.string().min(1, 'Workspace name is required').max(50, 'Workspace name is too long'),
     firstName: z.string().min(1, 'First name is required'),
     lastName: z.string().min(1, 'Last name is required'),
     email: z.string().email('Please enter a valid email address'),
@@ -72,7 +73,8 @@ export function RegisterPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await register({
+      const response = await registerTenant({
+        workspaceName: data.workspaceName,
         email: data.email,
         password: data.password,
         firstName: data.firstName,
@@ -80,9 +82,12 @@ export function RegisterPage() {
       });
 
       if (response.success && response.user) {
+        if (response.tenant?.id) {
+          localStorage.setItem('tenantId', response.tenant.id);
+        }
         setUser(response.user);
         addToast({
-          message: 'Account created successfully!',
+          message: 'Workspace created successfully!',
           variant: 'success',
           duration: 3000,
         });
@@ -100,9 +105,17 @@ export function RegisterPage() {
   };
 
   return (
-    <AuthLayout title="Create an account" subtitle="Start managing your expenses today">
+    <AuthLayout title="Create your workspace" subtitle="Start managing your expenses today">
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
+          <InputField
+            label="Workspace Name"
+            placeholder="Acme Corp"
+            autoComplete="organization"
+            error={errors.workspaceName?.message}
+            {...registerField('workspaceName')}
+          />
+
           <FormRow columns={2} gap="md">
             <InputField
               label="First name"
@@ -156,18 +169,18 @@ export function RegisterPage() {
               <input
                 id="terms"
                 type="checkbox"
-                className="h-4 w-4 rounded border-border-default text-primary-600 focus:ring-primary-500"
+                className="h-4 w-4 rounded border-border-default text-violet-500 focus:ring-primary-500"
                 {...registerField('acceptTerms')}
               />
             </div>
             <div className="ml-3 text-sm">
               <label htmlFor="terms" className="text-text-secondary">
                 I agree to the{' '}
-                <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
+                <a href="#" className="text-violet-500 hover:text-violet-400 font-medium">
                   Terms of Service
                 </a>{' '}
                 and{' '}
-                <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
+                <a href="#" className="text-violet-500 hover:text-violet-400 font-medium">
                   Privacy Policy
                 </a>
               </label>
@@ -185,7 +198,7 @@ export function RegisterPage() {
 
           <p className="text-center text-sm text-text-secondary">
             Already have an account?{' '}
-            <Link to="/login" className="font-medium text-primary-600 hover:text-primary-700">
+            <Link to="/login" className="font-medium text-violet-500 hover:text-violet-400">
               Sign in
             </Link>
           </p>

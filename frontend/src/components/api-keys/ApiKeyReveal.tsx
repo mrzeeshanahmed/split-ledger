@@ -75,7 +75,7 @@ export function ApiKeyReveal({ isOpen, onClose, apiKey, keyName }: ApiKeyRevealP
               type="checkbox"
               checked={confirmed}
               onChange={handleConfirmChange}
-              className="w-4 h-4 rounded border-border-default text-primary-600 focus:ring-primary-500"
+              className="w-4 h-4 rounded border-border-default text-violet-500 focus:ring-primary-500"
             />
             <span className="text-sm text-text-secondary">I have copied and saved this key</span>
           </label>

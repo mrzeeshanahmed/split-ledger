@@ -9,32 +9,33 @@
    ============================================================================ */
 
 @layer base {
+
   /* CSS Custom Properties from tokens */
   :root {
     /* Colors */
-    --color-primary-50: #eef2ff;
-    --color-primary-100: #e0e7ff;
-    --color-primary-200: #c7d2fe;
-    --color-primary-300: #a5b4fc;
-    --color-primary-400: #818cf8;
-    --color-primary-500: #6366f1;
-    --color-primary-600: #4f46e5;
-    --color-primary-700: #4338ca;
-    --color-primary-800: #3730a3;
-    --color-primary-900: #312e81;
-    --color-primary-950: #1e1b4b;
+    --color-primary-50: #f5f3ff;
+    --color-primary-100: #ede9fe;
+    --color-primary-200: #ddd6fe;
+    --color-primary-300: #c4b5fd;
+    --color-primary-400: #a78bfa;
+    --color-primary-500: #8b5cf6;
+    --color-primary-600: #7c3aed;
+    --color-primary-700: #6d28d9;
+    --color-primary-800: #5b21b6;
+    --color-primary-900: #4c1d95;
+    --color-primary-950: #2e1065;
 
-    --color-secondary-50: #f8fafc;
-    --color-secondary-100: #f1f5f9;
-    --color-secondary-200: #e2e8f0;
-    --color-secondary-300: #cbd5e1;
-    --color-secondary-400: #94a3b8;
-    --color-secondary-500: #64748b;
-    --color-secondary-600: #475569;
-    --color-secondary-700: #334155;
-    --color-secondary-800: #1e293b;
-    --color-secondary-900: #0f172a;
-    --color-secondary-950: #020617;
+    --color-secondary-50: #fafafa;
+    --color-secondary-100: #f4f4f5;
+    --color-secondary-200: #e4e4e7;
+    --color-secondary-300: #d4d4d8;
+    --color-secondary-400: #a1a1aa;
+    --color-secondary-500: #71717a;
+    --color-secondary-600: #52525b;
+    --color-secondary-700: #3f3f46;
+    --color-secondary-800: #27272a;
+    --color-secondary-900: #18181b;
+    --color-secondary-950: #09090b;
 
     --color-accent-50: #ecfdf5;
     --color-accent-100: #d1fae5;
@@ -135,8 +136,7 @@
   }
 
   body {
-    background-color: var(--color-secondary-50);
-    color: var(--color-secondary-900);
+    @apply bg-secondary-950 text-secondary-50;
     min-height: 100vh;
   }
 
@@ -201,7 +201,8 @@
   }
 
   pre code {
-    @apply bg-transparent text-inherit p-0;
+    @apply bg-transparent p-0;
+    color: inherit;
   }
 
   /* Scrollbar styling */
@@ -232,9 +233,10 @@
    ============================================================================ */
 
 @layer components {
+
   /* Card base */
   .card {
-    @apply bg-white border border-border-default rounded-lg shadow-sm;
+    @apply bg-secondary-950/40 backdrop-blur-xl border border-white/5 rounded-lg shadow-lg;
   }
 
   /* Button base */
@@ -244,7 +246,7 @@
 
   /* Input base */
   .input {
-    @apply w-full px-3 py-2 text-sm border border-border-default rounded-lg bg-white transition-all duration-normal placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-secondary-50 disabled:cursor-not-allowed;
+    @apply w-full px-3 py-2 text-sm border border-white/10 rounded-lg bg-secondary-900/50 text-white transition-all duration-normal placeholder:text-secondary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-secondary-800 disabled:cursor-not-allowed;
   }
 
   .input-error {
@@ -272,6 +274,7 @@
    ============================================================================ */
 
 @layer utilities {
+
   /* Text utilities */
   .text-balance {
     text-wrap: balance;
@@ -279,12 +282,10 @@
 
   /* Animation utilities */
   .animate-shimmer {
-    background: linear-gradient(
-      90deg,
-      var(--color-secondary-100) 25%,
-      var(--color-secondary-50) 50%,
-      var(--color-secondary-100) 75%
-    );
+    background: linear-gradient(90deg,
+        var(--color-secondary-100) 25%,
+        var(--color-secondary-50) 50%,
+        var(--color-secondary-100) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }

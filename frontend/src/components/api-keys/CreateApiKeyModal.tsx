@@ -161,7 +161,7 @@ export function CreateApiKeyModal({ isOpen, onClose, onSubmit, loading }: Create
                 className={cn(
                   'w-full flex items-center gap-3 p-3 rounded-lg border-2 transition-all duration-normal text-left',
                   selectedScopes.includes(scope.value)
-                    ? 'border-primary-500 bg-primary-50'
+                    ? 'border-primary-500 bg-violet-500/10'
                     : 'border-border-default hover:border-primary-300'
                 )}
               >
