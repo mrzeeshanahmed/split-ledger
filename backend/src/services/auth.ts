@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { randomUUID } from 'crypto';
+import { randomUUID, randomBytes } from 'crypto';
 import { env } from '../config/env.js';
 import logger from '../utils/logger.js';
 import {
@@ -9,8 +9,7 @@ import {
   PasswordResetToken,
 } from '../types/user.js';
 import { getRedisClient, setWithExpiry, getJSON, deleteKey } from '../db/redis.js';
-
-const SALT_ROUNDS = 12;
+import { SALT_ROUNDS, REFRESH_TOKEN_BLACKLIST_TTL_SECONDS } from '../config/constants.js';
 
 /**
  * Authentication Service
@@ -57,11 +56,6 @@ export class AuthService {
         audience: expectedTenantId,
       }) as TokenPayload;
 
-      // Ensure tenant matches
-      if (payload.tenantId !== expectedTenantId) {
-        throw new Error('Token tenant mismatch');
-      }
-
       return payload;
     } catch (error) {
       logger.warn({
@@ -84,11 +78,6 @@ export class AuthService {
         issuer: 'split-ledger-api',
         audience: expectedTenantId,
       }) as RefreshTokenData;
-
-      // Ensure tenant matches
-      if (payload.tenantId !== expectedTenantId) {
-        throw new Error('Token tenant mismatch');
-      }
 
       // Check if token is blacklisted
       const isBlacklisted = await this.isRefreshTokenBlacklisted(payload.tokenId);
@@ -126,7 +115,7 @@ export class AuthService {
   static async blacklistRefreshToken(tokenId: string): Promise<void> {
     const redis = getRedisClient();
     const key = `blacklist:refresh:${tokenId}`;
-    await setWithExpiry(key, '1', 7 * 24 * 60 * 60); // 7 days
+    await setWithExpiry(key, '1', REFRESH_TOKEN_BLACKLIST_TTL_SECONDS);
     logger.debug({
       message: 'Refresh token blacklisted',
       tokenId,
@@ -202,7 +191,7 @@ export class AuthService {
    */
   static generateRandomPassword(length = 16): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
-    const bytes = require('crypto').randomBytes(length);
+    const bytes = randomBytes(length);
     let result = '';
     for (let i = 0; i < length; i++) {
       result += chars[bytes[i] % chars.length];

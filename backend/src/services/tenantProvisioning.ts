@@ -10,8 +10,8 @@ import {
   SUBDOMAIN_REGEX,
 } from '../types/tenant.js';
 import logger from '../utils/logger.js';
-
-const SALT_ROUNDS = 12;
+import { SALT_ROUNDS } from '../config/constants.js';
+import { getTenantProvisioningSQL } from '../db/tenantSchema.sql.js';
 
 export class TenantProvisioningService {
   /**
@@ -24,12 +24,21 @@ export class TenantProvisioningService {
       // Create the tenant record
       const tenantId = randomUUID();
 
-      const { rows: tenantRows } = await client.query(
-        `INSERT INTO tenants (id, name, subdomain, custom_domain, billing_email, owner_id)
-         VALUES ($1, $2, $3, $4, $5, NULL)
-         RETURNING *`,
-        [tenantId, input.name, input.subdomain, input.custom_domain || null, input.billing_email || null]
-      );
+      let tenantRows;
+      try {
+        const result = await client.query(
+          `INSERT INTO tenants (id, name, subdomain, custom_domain, billing_email, owner_id)
+           VALUES ($1, $2, $3, $4, $5, NULL)
+           RETURNING *`,
+          [tenantId, input.name, input.subdomain, input.custom_domain || null, input.billing_email || null]
+        );
+        tenantRows = result.rows;
+      } catch (err: any) {
+        if (err.code === '23505' && err.constraint === 'tenants_subdomain_key') {
+          throw new TenantError('This subdomain is already taken', 'DUPLICATE_SUBDOMAIN', 409);
+        }
+        throw err;
+      }
 
       const tenant = tenantRows[0];
 
@@ -41,26 +50,11 @@ export class TenantProvisioningService {
         throw new Error('Invalid schema name generated');
       }
 
-      // Create schema for tenant
-      await client.query(`CREATE SCHEMA IF NOT EXISTS ${schemaName}`);
+      // Execute static schema provisioning
+      const provisioningSQL = getTenantProvisioningSQL(schemaName);
+      await client.query(provisioningSQL);
 
-      // Fetch all tables from the tenant_template schema
-      const { rows: tables } = await client.query(`
-        SELECT table_name 
-        FROM information_schema.tables 
-        WHERE table_schema = 'tenant_template'
-      `);
-
-      logger.debug({ message: 'Tables cloned from tenant_template', tables: tables.map((t: any) => t.table_name) });
-
-      // Clone every table in tenant_template
-      for (const { table_name } of tables) {
-        await client.query(`
-          CREATE TABLE ${schemaName}.${table_name} (
-            LIKE tenant_template.${table_name} INCLUDING ALL
-          )
-        `);
-      }
+      logger.debug({ message: 'Provisioned schema via static SQL', schemaName });
 
       // Hash owner password
       const passwordHash = await bcrypt.hash(input.owner_password, SALT_ROUNDS);

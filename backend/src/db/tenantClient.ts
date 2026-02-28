@@ -139,7 +139,7 @@ export class TenantPoolClient {
     if (!this.searchPathSet) {
       // Set search_path to tenant schema and public (for shared tables)
       await this.client.query(
-        `SET search_path TO ${this.tenantSchema}, public`
+        `SET search_path TO "${this.tenantSchema}", public`
       );
       this.searchPathSet = true;
 

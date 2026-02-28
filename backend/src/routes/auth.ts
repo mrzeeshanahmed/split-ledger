@@ -322,23 +322,19 @@ router.post(
         throw new UnauthorizedError('Account is not active');
       }
 
-      // Generate new access token
-      const accessToken = AuthService.generateAccessToken({
+      // Blacklist the old refresh token to prevent reuse (Token Rotation)
+      await AuthService.blacklistRefreshToken(payload.tokenId);
+
+      // Generate new token pair
+      const { accessToken, refreshToken: newRefreshToken } = AuthService.generateTokens({
         userId: user.id,
         tenantId: req.tenantId!,
         email: user.email,
         role: user.role,
       });
 
-      // Set new access token cookie
-      res.cookie('access_token', accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 15 * 60 * 1000, // 15 minutes
-        domain: process.env.COOKIE_DOMAIN,
-        path: '/',
-      });
+      // Set cookies with new tokens
+      setAuthCookies(res, accessToken, newRefreshToken);
 
       logger.debug({
         message: 'Access token refreshed',
