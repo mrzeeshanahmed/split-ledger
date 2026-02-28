@@ -7,7 +7,7 @@ export function PrivacyPolicyPage() {
             <nav className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/80 backdrop-blur-xl border-b border-white/5">
                 <div className="max-w-4xl mx-auto px-6 h-16 flex items-center">
                     <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-                        <img src="/src/assets/logo.png" alt="Split-Ledger Logo" className="h-8 object-contain" />
+                        <img src="/logo.png" alt="Split-Ledger Logo" className="h-8 object-contain" />
                     </Link>
                 </div>
             </nav>

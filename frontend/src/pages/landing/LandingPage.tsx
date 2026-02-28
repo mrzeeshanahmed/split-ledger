@@ -5,6 +5,7 @@ import { HowItWorksSection } from './HowItWorksSection';
 import { PricingSection } from './PricingSection';
 import { CTASection } from './CTASection';
 import { FooterSection } from './FooterSection';
+import { NotificationBanner } from './NotificationBanner';
 
 /**
  * LandingPage — Premium landing page composing all sections
@@ -34,7 +35,7 @@ export function LandingPage() {
             <nav className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/60 backdrop-blur-2xl border-b border-white/[0.04]">
                 <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16">
                     <a href="/" className="flex items-center gap-2.5">
-                        <img src="/src/assets/logo.png" alt="Split-Ledger Logo" className="h-8 object-contain" />
+                        <img src="/logo.png" alt="Split-Ledger Logo" className="h-8 object-contain" />
                     </a>
                     <div className="hidden md:flex items-center gap-8">
                         <a href="#features" className="text-sm text-zinc-400 hover:text-white transition-colors duration-200">Features</a>
@@ -56,6 +57,9 @@ export function LandingPage() {
             </nav>
 
             {/* Page sections */}
+            <div className="pt-16">
+                <NotificationBanner />
+            </div>
             <HeroSection />
             <div id="features">
                 <FeaturesSection />
@@ -67,6 +71,7 @@ export function LandingPage() {
                 <PricingSection />
             </div>
             <CTASection />
+            <NotificationBanner />
             <FooterSection />
         </div>
     );

@@ -46,7 +46,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
                 <TopBar
                     left={
                         <div className="flex items-center gap-2">
-                            <span className="text-lg font-bold text-violet-500">⚡</span>
+                            <img src="/logo.png" alt="Split-Ledger Logo" className="h-6 w-auto" />
                             <span className="font-semibold text-text-primary">
                                 {collapsed ? '' : 'Platform Admin'}
                             </span>

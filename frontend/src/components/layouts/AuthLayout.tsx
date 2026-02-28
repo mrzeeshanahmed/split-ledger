@@ -29,16 +29,8 @@ export function AuthLayout({ children, className, title, subtitle }: AuthLayoutP
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-fuchsia-600/20 blur-[120px] rounded-full pointer-events-none" />
 
       {/* Logo */}
-      <div className="mb-8 relative z-10">
-        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25">
-          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-            />
-          </svg>
-        </div>
+      <div className="mb-8 relative z-10 text-center">
+        <img src="/logo.png" alt="Split-Ledger Logo" className="h-12 w-auto mx-auto drop-shadow-lg" />
       </div>
 
       {/* Card */}

@@ -39,7 +39,7 @@ export function AdminLoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-background-subtle p-4">
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
-                    <img src="/src/assets/logo.png" alt="Split-Ledger Logo" className="h-10 mx-auto mb-4" />
+                    <img src="/logo.png" alt="Split-Ledger Logo" className="h-10 mx-auto mb-4" />
                     <p className="text-text-secondary mt-2">Platform Administration</p>
                 </div>
 

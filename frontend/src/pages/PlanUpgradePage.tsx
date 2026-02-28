@@ -86,7 +86,7 @@ export function PlanUpgradePage() {
 
   const topBar = (
     <TopBar
-      left={<img src="/src/assets/logo.png" alt="Split-Ledger Logo" className="h-8 object-contain" />}
+      left={<img src="/logo.png" alt="Split-Ledger Logo" className="h-8 object-contain" />}
       right={
         <div className="flex items-center gap-4">
           <span className="text-sm text-text-secondary">
