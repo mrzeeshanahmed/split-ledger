@@ -104,7 +104,12 @@ If you prefer going completely serverless, Split-Ledger can be deployed directly
 - **Frontend App**: React 18, Vite, Tailwind CSS, Lucide React, Recharts
 
 ## Contributing
-Feel free to open issues and pull requests to help improve the project.
+Feel free to open issues and pull requests to help improve the project. Please note that the `main` branch is protected and direct pushes are restricted.
+
+## License
+This project is published under the **Apache License 2.0 with a Commercial Revenue Exception**. 
+
+Any Legal Entity or individual whose gross annual revenue exceeds **$10,000,000 USD** MUST contact the original developer (Zeeshan Ahmed) to negotiate a commercial license before integrating or distributing this Work in a production environment. See the [LICENSE](./LICENSE) file for full details.
 
 ## Support & Sponsor
 We put a lot of time into making this boilerplate comprehensive and production-ready. If it helped you save time, please consider buying me a coffee!
