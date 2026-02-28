@@ -61,7 +61,7 @@ export class TenantProvisioningService {
 
       // Insert owner user
       const { rows: userRows } = await client.query(
-        `INSERT INTO ${schemaName}.users 
+        `INSERT INTO "${schemaName}".users 
          (email, password_hash, first_name, last_name, role, email_verified)
          VALUES ($1, $2, $3, $4, 'owner', TRUE)
          RETURNING *`,
@@ -180,7 +180,7 @@ export class TenantProvisioningService {
 
     const { rows } = await query(
       `SELECT id, email, first_name, last_name, role, status, email_verified, created_at, updated_at
-       FROM ${schemaName}.users
+       FROM "${schemaName}".users
        ORDER BY created_at DESC`
     );
 
